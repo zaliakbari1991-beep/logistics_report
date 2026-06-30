@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>پلتفرم اختصاصی لجستیک </title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Vazirmatn', Tahoma, 'Segoe UI', Arial, sans-serif; background: #f0efe9; direction: rtl; line-height: 1.5; color: #1a2a6b; }
+  @media (prefers-color-scheme: dark) { body { background: #1c1c1a; } .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card { background: #252523; border-color: #3a3a36; color: #d0d4e8; } .stat-item { border-bottom-color: #3a3a36; } }
+  
+  /* خط نازک نارنجی یکسان برای همه کادرها */
+  .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card, .metric-box, .stats-row .stat-card, .shipping-card, .countries-list, .country-detail, .investment-card, .cor-card, .route-card-ahvaz, .port-card, .corridor-card, .bri-card, .metric-card, .inner-metric, .alert-banner, .compare-tab, .port-compare-wrapper, .comp-table-wrap, .recommend-box, .pc, .alert, .reco, .thresh, .carec-map-card, .topbar, .tabs, .port-grid .pc, .panel .alert, .ref, .sdiv, .thresh, .comp-wrap, .reco, .port-grid .pc .cs, .pc-head, .route-card-pro, .port-card-pro, .info-card-pro, .route-card-new, .corridor-card-new, .corridor-header-new, .tab-new, .compare-tab, .section-card-new, .alert, .alert-box-new, .ref-box-new, .branch-ahvaz, .info-item-ahvaz, .path-visual-ahvaz, .comparison-table-ahvaz, .carec-map-card, .pdf-download-section, .bri-card-new, .corridor-card, .port-card, .bri-card, .metric-card, .inner-metric {
+    outline: 0.5px solid #F79646;
+    outline-offset: -0.5px;
+  }
+  
+  /* یکدست کردن رنگ متن اصلی همه بخش‌ها به سرمه‌ای */
+  body, .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card, .metric-box, .stats-row .stat-card, .shipping-card, .countries-list, .country-detail, .investment-card, .cor-card, .route-card-ahvaz, .port-card, .corridor-card, .bri-card, .metric-card, .inner-metric, .alert-banner, .compare-tab, .port-compare-wrapper, .comp-table-wrap, .recommend-box, .pc, .alert, .reco, .thresh, .carec-map-card, .topbar, .tabs, .port-grid .pc, .panel .alert, .ref, .sdiv, .thresh, .comp-wrap, .reco, .port-grid .pc .cs, .pc-head, .route-card-pro, .port-card-pro, .info-card-pro, .route-card-new, .corridor-card-new, .corridor-header-new, .tab-new, .compare-tab, .section-card-new, .alert, .alert-box-new, .ref-box-new, .branch-ahvaz, .info-item-ahvaz, .path-visual-ahvaz, .comparison-table-ahvaz, .carec-map-card, .pdf-download-section, .bri-card-new, .corridor-card, .port-card, .bri-card, .metric-card, .inner-metric, .detail-panel-pro, .port-detail-pro, .route-detail, .country-info-value, .stat-item .number, .metric-value, .stat-title, .shipping-title, .investment-title, .cor-name, .detail-title, .info-value-ahvaz, .info-label-ahvaz, .route-name-ahvaz, .branch-title-ahvaz, .alert-title, .card-title, .section-title, .inner-value, .kv-val, .corridor-name, .bri-value, .port-name, .metric-label, .stat-item .label, .country-info-label, .update-note, .dash-footer p, .badge, .tag, .compare-tab, .nav-btn, .route-btn, .map-btn, .filt, .cor-badge, .status-badge-ahvaz, .ref-box-ahvaz, .footer-note-ahvaz, th, td, .caption, .pdf-link, .alert-body, .route-sub-ahvaz, .info-label, .kv-key, .inner-label, .metric-sub, .bar-label, .bar-pct, .port-header, .corridor-header, .bri-label, .metric-label-new, .metric-value-new, .metric-note-new, .tag-new, .route-step-new, .route-arrow-new, .leg-item-new, .li-new, .sec-header-new h2, .ref-inline-new, .badge-new, .note-new, .risk-row-new, .rdot-new, .src-badge-new, .alert-warn-new, .alert-danger-new, .alert-ok-new, .compare-panel, .filter-btn-pro, .port-stat-label-pro, .port-stat-value-pro, .detail-close-pro, .info-label-pro, .info-value-pro, .route-title-pro, .rf-label-pro, .rf-val-pro, .risk-item-pro, .route-note-pro, .thresh-title, .thresh-row, .branch-title-ahvaz, .info-label-ahvaz, .info-value-ahvaz strong, .country-info-value, .country-info-label {
+    color: #1a2a6b;
+  }
+  
+  /* حفظ رنگ‌های ویژه (اخطار، ریسک، موفقیت) بدون تغییر */
+  .risk-high, .c-danger, .status-critical-ahvaz, .alert-danger-new, .tag-danger, .badge-danger, .c-warning, .tag-warning, .risk-medium, .c-info, .tag-info, .c-success, .tag-success, .status-active-ahvaz, .alert-success, .risk-low, .text-success, .text-danger, .text-warning, .text-info {
+    color: inherit;
+  }
+  .risk-high { color: #E24B4A; }
+  .risk-medium { color: #BA7517; }
+  .risk-low { color: #1D9E75; }
+  .c-danger { color: #b91c1c; }
+  .c-success { color: #15803d; }
+  .c-warning { color: #c2410c; }
+  .c-info { color: #185FA5; }
+  
+  .page-header { background: white; border-bottom: 1px solid rgba(0,0,0,0.1); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+  .page-header h1 { font-size: 18px; font-weight: 600; }
+  .page-header p { font-size: 12px; color: #666; margin-top: 4px; }
+  .nav-btn { font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid #ddd; background: transparent; cursor: pointer; font-family: inherit; }
+  .nav-btn.active { background: #185FA5; color: white; border-color: #185FA5; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+  .dash-section { display: none; }
+  .dash-section.active { display: block; }
+  
+  /* استایل‌های صفحه اول (کریدور اختصاصی) */
+  .project-description {
+    background: linear-gradient(115deg, #ffffff 0%, #fefcf7 100%);
+    border-radius: 28px;
+    padding: 1.6rem 2rem;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+    border: 1px solid rgba(245,166,35,0.25);
+    border-right: 8px solid #f5a623;
+  }
+  .badge-title {
+    display: inline-block;
+    background: #f5a62320;
+    color: #b4580c;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 40px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+  }
+  .project-description h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0b3552;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .highlight {
+    color: #f5a623;
+    border-bottom: 2px solid #f5a623;
+    display: inline-block;
+  }
+  .desc-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.8rem;
+    margin: 1.2rem 0 0.6rem;
+  }
+  .desc-card {
+    flex: 1;
+    min-width: 180px;
+    background: #f8fafd;
+    border-radius: 20px;
+    padding: 1rem 1.2rem;
+    border: 1px solid #eef2f9;
+  }
+  .desc-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .desc-card h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 0.4rem; }
+  .desc-card p { font-size: 0.75rem; color: #49658c; line-height: 1.6; }
+  .desc-footer-note {
+    margin-top: 1.2rem;
+    background: #eef3fc;
+    padding: 0.8rem 1.2rem;
+    border-radius: 18px;
+    font-size: 0.75rem;
+    color: #25597e;
+    display: inline-block;
+    width: auto;
+  }
+  .google-map-card {
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    border: 1px solid #e9edf4;
+    margin-bottom: 1.5rem;
+  }
+  .google-map-frame { width: 100%; height: 620px; border: none; display: block; }
+  .map-footer-note {
+    background: #fbfbfe;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.7rem;
+    color: #6c7f9e;
+    border-top: 1px solid #edf2f8;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 10px; margin-left: 6px; }
+  .capabilities-section { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 0.5rem; }
+  .cap-card {
+    flex: 1;
+    background: white;
+    border-radius: 22px;
+    padding: 1.2rem 1.2rem;
+    border: 1px solid #eef2fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    transition: all 0.2s;
+  }
+  .cap-card:hover { transform: translateY(-3px); border-color: #f5a62360; }
+  .cap-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 0.6rem; color: #0f3b5c; display: flex; align-items: center; gap: 10px; }
+  .cap-text { font-size: 0.75rem; color: #446688; line-height: 1.65; }
+  @media (prefers-color-scheme: dark) {
+    .project-description { background: #1e2a3a; border-color: #f5a62340; }
+    .project-description h2 { color: #e2e8f0; }
+    .desc-card { background: #1a2533; border-color: #2a3a4a; }
+    .desc-card p { color: #94a3b8; }
+    .desc-footer-note { background: #0f2a3a; color: #b5d4f4; }
+    .google-map-card { background: #1a2533; border-color: #2a3a4a; }
+    .map-footer-note { background: #1a2533; border-color: #2a3a4a; color: #94a3b8; }
+    .cap-card { background: #1a2533; border-color: #2a3a4a; }
+    .cap-title { color: #e2e8f0; }
+    .cap-text { color: #94a3b8; }
+  }
+  @media (max-width: 780px) {
+    .google-map-frame { height: 460px; }
+    .project-description h2 { font-size: 1.2rem; }
+    .desc-grid { flex-direction: column; gap: 1rem; }
+  }
+
+  .card { background: white; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .metric-box { background: white; border-radius: 12px; padding: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .metric-value { font-size: 24px; font-weight: 700; color: #185FA5; }
+  .metric-label { font-size: 11px; color: #666; margin-top: 4px; }
+  .stats-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; margin-bottom: 24px; }
+  .stat-card { flex: 1; min-width: 200px; background: white; border-radius: 12px; padding: 16px; }
+  .stat-title { font-size: 13px; font-weight: 600; color: #185FA5; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px; }
+  .stat-item { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .stat-item .label { color: #666; }
+  .stat-item .number { font-weight: 700; }
+  .shipping-section { margin-bottom: 24px; }
+  .shipping-title { font-size: 16px; font-weight: 600; color: #185FA5; margin-bottom: 12px; padding-right: 8px; border-right: 3px solid #185FA5; }
+  .shipping-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .shipping-card { background: white; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .shipping-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #185FA5; }
+  .shipping-stat { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; border-bottom: 1px solid #eee; }
+  .countries-container { display: flex; gap: 20px; margin-bottom: 24px; }
+  .countries-list { width: 280px; flex-shrink: 0; background: white; border-radius: 12px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .countries-list h4 { font-size: 14px; font-weight: 600; color: #185FA5; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+  .country-item { padding: 8px 12px; margin: 4px 0; cursor: pointer; border-radius: 8px; font-size: 13px; transition: all 0.2s; }
+  .country-item:hover { background: #e8f0fe; }
+  .country-item.active { background: #185FA5; color: white; }
+  .country-detail { flex: 1; background: white; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-height: 300px; }
+  .country-detail h4 { font-size: 16px; font-weight: 600; color: #185FA5; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+  .country-info-row { display: flex; margin-bottom: 12px; font-size: 13px; }
+  .country-info-label { width: 120px; font-weight: 600; color: #666; }
+  .country-info-value { flex: 1; color: #333; }
+  .investment-section { margin-top: 24px; }
+  .investment-title { font-size: 16px; font-weight: 600; color: #185FA5; margin-bottom: 12px; padding-right: 8px; border-right: 3px solid #185FA5; }
+  .investment-card { background: white; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .investment-placeholder { color: #999; font-size: 13px; }
+  .cor-card { background: white; border-radius: 12px; margin-bottom: 8px; cursor: pointer; overflow: hidden; }
+  .cor-header { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; border-bottom: 1px solid #eee; }
+  .cor-name { font-size: 13px; font-weight: 700; color: #185FA5; }
+  .cor-badge { font-size: 10px; padding: 2px 10px; border-radius: 20px; background: #E6F1FB; color: #0C447C; }
+  .cor-detail { max-height: 0; padding: 0 18px; overflow: hidden; transition: max-height 0.35s ease-out; background: white; }
+  .cor-card.open .cor-detail { max-height: 350px; padding: 14px 18px; border-top: 1px solid #eee; }
+  .detail-row { display: flex; justify-content: space-between; font-size: 11px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+  .map-section { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+  .map-toolbar { padding: 8px 16px; background: #f5f5f5; display: flex; gap: 8px; flex-wrap: wrap; }
+  .map-btn { font-size: 11px; padding: 4px 12px; border-radius: 6px; border: 1px solid #ddd; background: white; cursor: pointer; }
+  .map-btn.active { background: #185FA5; color: white; }
+  #map { height: 450px; }
+  .route-btn { font-size: 11px; padding: 5px 14px; border-radius: 20px; border: 1px solid #ccc; background: white; cursor: pointer; margin: 3px; }
+  .route-btn.active { background: #185FA5; color: white; }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filt { font-size: 11px; padding: 5px 14px; border-radius: 20px; border: 1px solid #ddd; background: white; cursor: pointer; }
+  .filt.on { background: #185FA5; color: white; }
+  .update-note { font-size: 10px; color: #999; text-align: left; margin-top: 20px; }
+  @media (max-width: 768px) { .countries-container { flex-direction: column; } .countries-list { width: 100%; } }
+  
+  /* استایل‌های مقصد:اهواز */
+  .alert-banner { margin: 20px 0; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-right: 4px solid #ef4444; border-radius: 8px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start; }
+  .alert-icon { font-size: 20px; }
+  .alert-title { font-weight: 700; color: #b91c1c; font-size: 13px; margin-bottom: 4px; }
+  .alert-body { color: var(--text-muted, #666); font-size: 12.5px; line-height: 1.7; }
+  .ahvaz-section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #185FA5; text-transform: uppercase; margin: 36px 0 16px; display: flex; align-items: center; gap: 10px; }
+  .ahvaz-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border, #eee); }
+  .route-card-ahvaz { background: var(--bg, white); border: 1px solid var(--border, #eee); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+  .route-header-ahvaz { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .route-num-ahvaz { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; }
+  .route-name-ahvaz { font-size: 16px; font-weight: 700; color: var(--text, #1a1a18); }
+  .route-sub-ahvaz { font-size: 12px; color: var(--text2, #666); margin-top: 2px; }
+  .status-badge-ahvaz { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .status-critical-ahvaz { background: rgba(239,68,68,0.15); color: #b91c1c; border: 1px solid rgba(239,68,68,0.3); }
+  .status-high-ahvaz { background: rgba(249,115,22,0.15); color: #c2410c; border: 1px solid rgba(249,115,22,0.3); }
+  .status-active-ahvaz { background: rgba(16,185,129,0.15); color: #15803d; border: 1px solid rgba(16,185,129,0.3); }
+  .route-body-ahvaz { padding: 0 20px 20px; display: none; }
+  .route-card-ahvaz.open .route-body-ahvaz { display: block; }
+  .route-card-ahvaz.open .divider-ahvaz { display: block; }
+  .divider-ahvaz { height: 1px; background: var(--border, #eee); margin: 0 20px 20px; display: none; }
+  .chevron-ahvaz { transition: transform 0.25s; font-size: 12px; color: var(--text2, #666); }
+  .route-card-ahvaz.open .chevron-ahvaz { transform: rotate(180deg); }
+  .info-grid-ahvaz { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .info-item-ahvaz { background: var(--bg2, #f5f5f5); border-radius: 8px; padding: 12px 14px; }
+  .info-label-ahvaz { font-size: 11px; color: var(--text3, #999); font-weight: 600; margin-bottom: 5px; }
+  .info-value-ahvaz { font-size: 13px; color: var(--text, #1a1a18); line-height: 1.6; }
+  .info-value-ahvaz strong { color: #185FA5; }
+  .path-visual-ahvaz { background: var(--bg2, #f5f5f5); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; overflow-x: auto; }
+  .path-flow-ahvaz { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .path-node-ahvaz { background: var(--bg, white); border: 1px solid var(--border, #ddd); padding: 4px 10px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
+  .path-node-highlight { background: rgba(24,95,165,0.1); border-color: #185FA5; color: #185FA5; font-weight: 600; }
+  .path-arrow-ahvaz { color: var(--text2, #666); font-size: 13px; }
+  .branch-ahvaz { background: var(--bg2, #f5f5f5); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border-right: 3px solid var(--border, #ddd); }
+  .branch.br1-ahvaz { border-color: #3b82f6; }
+  .branch.br2-ahvaz { border-color: #10b981; }
+  .branch.br3-ahvaz { border-color: #f59e0b; }
+  .branch-title-ahvaz { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+  .risk-list-ahvaz { list-style: none; margin-top: 12px; }
+  .risk-list-ahvaz li { padding: 5px 0; font-size: 12.5px; color: var(--text2, #666); display: flex; gap: 7px; }
+  .risk-list-ahvaz li::before { content: '🚨'; font-size: 11px; color: #f97316; }
+  .ref-box-ahvaz { background: rgba(24,95,165,0.05); border: 1px solid rgba(24,95,165,0.15); border-radius: 6px; padding: 8px 12px; font-size: 11.5px; color: var(--text2, #666); margin-top: 12px; }
+  .expand-all-btn-ahvaz { background: rgba(24,95,165,0.1); border: 1px solid rgba(24,95,165,0.25); color: #185FA5; padding: 7px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 16px; font-family: 'Vazirmatn', sans-serif; }
+  .comparison-table-ahvaz { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .comparison-table-ahvaz th { background: var(--bg2, #f5f5f5); padding: 10px 12px; font-weight: 700; font-size: 11px; color: var(--text2, #666); text-align: right; border-bottom: 2px solid var(--border, #ddd); }
+  .comparison-table-ahvaz td { padding: 10px 12px; border-bottom: 1px solid var(--border, #ddd); vertical-align: top; }
+  .footer-note-ahvaz { background: var(--bg2, #f5f5f5); border: 1px solid var(--border, #ddd); border-radius: 10px; padding: 20px; margin-top: 32px; font-size: 12px; color: var(--text2, #666); line-height: 1.9; }
+  @media (prefers-color-scheme: dark) { .info-item-ahvaz { background: #2a2a28; } .path-visual-ahvaz { background: #2a2a28; } .branch-ahvaz { background: #2a2a28; } .comparison-table-ahvaz th { background: #2a2a28; } .footer-note-ahvaz { background: #2a2a28; } }
+  
+  .carec-maps-container { margin: 30px 0 20px; }
+  .carec-maps-title { font-size: 16px; font-weight: 600; color: #185FA5; margin-bottom: 15px; padding-right: 8px; border-right: 3px solid #185FA5; }
+  .carec-maps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; margin-bottom: 20px; }
+  .carec-map-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; }
+  .carec-map-card img { width: 100%; height: auto; background: #f0f2f5; min-height: 200px; object-fit: cover; }
+  .carec-map-card .caption { padding: 12px; text-align: center; font-weight: bold; color: #1a5276; background: #f8f9fa; border-top: 2px solid #f1c40f; font-size: 13px; }
+  .pdf-download-section { background: #f0f7ff; border-radius: 12px; padding: 15px 20px; margin: 20px 0; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: center; border: 1px solid #c5d5e8; }
+  .pdf-download-section h4 { color: #185FA5; margin: 0; font-size: 14px; }
+  .pdf-link { display: inline-flex; align-items: center; gap: 8px; background: white; padding: 8px 16px; border-radius: 25px; text-decoration: none; color: #185FA5; font-weight: 600; font-size: 12px; border: 1px solid #185FA5; transition: all 0.2s; }
+  .pdf-link:hover { background: #185FA5; color: white; }
+  @media (prefers-color-scheme: dark) { .carec-map-card { background: #252523; border-color: #3a3a36; } .carec-map-card .caption { background: #2a2a28; color: #ccc; } .pdf-download-section { background: #1a2a3a; border-color: #185FA5; } }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f8f9fa;
+    --surface2: #f1f3f5;
+    --border: #e9ecef;
+    --border-med: #dee2e6;
+    --text: #212529;
+    --text-muted: #6c757d;
+    --text-dim: #adb5bd;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-mid: #378ADD;
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --green-mid: #639922;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --red-mid: #E24B4A;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --coral: #993C1D;
+    --coral-light: #FAECE7;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --success-bg: #EAF3DE;
+    --success-text: #3B6D11;
+    --warning-bg: #FAEEDA;
+    --warning-text: #BA7517;
+    --danger-bg: #FCEBEB;
+    --danger-text: #A32D2D;
+    --info-bg: #E6F1FB;
+    --info-text: #185FA5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2a2f45;
+      --border-med: #333855;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --blue-light: #0C447C;
+      --blue-mid: #378ADD;
+      --green-light: #173404;
+      --green-mid: #639922;
+      --amber-light: #412402;
+      --red-light: #501313;
+      --red-mid: #E24B4A;
+      --purple-light: #26215C;
+      --coral-light: #4A1B0C;
+      --teal-light: #04342C;
+      --success-bg: #173404;
+      --success-text: #C0DD97;
+      --warning-bg: #412402;
+      --warning-text: #FAC775;
+      --danger-bg: #501313;
+      --danger-text: #F7C1C1;
+      --info-bg: #042C53;
+      --info-text: #B5D4F4;
+    }
+    body, .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card, .metric-box, .stats-row .stat-card, .shipping-card, .countries-list, .country-detail, .investment-card, .cor-card, .route-card-ahvaz, .port-card, .corridor-card, .bri-card, .metric-card, .inner-metric, .alert-banner, .compare-tab, .port-compare-wrapper, .comp-table-wrap, .recommend-box, .pc, .alert, .reco, .thresh, .carec-map-card, .topbar, .tabs, .port-grid .pc, .panel .alert, .ref, .sdiv, .thresh, .comp-wrap, .reco, .port-grid .pc .cs, .pc-head, .route-card-pro, .port-card-pro, .info-card-pro, .route-card-new, .corridor-card-new, .corridor-header-new, .tab-new, .compare-tab, .section-card-new, .alert, .alert-box-new, .ref-box-new, .branch-ahvaz, .info-item-ahvaz, .path-visual-ahvaz, .comparison-table-ahvaz, .carec-map-card, .pdf-download-section, .bri-card-new, .corridor-card, .port-card, .bri-card, .metric-card, .inner-metric, .detail-panel-pro, .port-detail-pro, .route-detail, .country-info-value, .stat-item .number, .metric-value, .stat-title, .shipping-title, .investment-title, .cor-name, .detail-title, .info-value-ahvaz, .info-label-ahvaz, .route-name-ahvaz, .branch-title-ahvaz, .alert-title, .card-title, .section-title, .inner-value, .kv-val, .corridor-name, .bri-value, .port-name, .metric-label, .stat-item .label, .country-info-label, .update-note, .dash-footer p, .badge, .tag, .compare-tab, .nav-btn, .route-btn, .map-btn, .filt, .cor-badge, .status-badge-ahvaz, .ref-box-ahvaz, .footer-note-ahvaz, th, td, .caption, .pdf-link, .alert-body, .route-sub-ahvaz, .info-label, .kv-key, .inner-label, .metric-sub, .bar-label, .bar-pct, .port-header, .corridor-header, .bri-label, .metric-label-new, .metric-value-new, .metric-note-new, .tag-new, .route-step-new, .route-arrow-new, .leg-item-new, .li-new, .sec-header-new h2, .ref-inline-new, .badge-new, .note-new, .risk-row-new, .rdot-new, .src-badge-new, .alert-warn-new, .alert-danger-new, .alert-ok-new, .compare-panel, .filter-btn-pro, .port-stat-label-pro, .port-stat-value-pro, .detail-close-pro, .info-label-pro, .info-value-pro, .route-title-pro, .rf-label-pro, .rf-val-pro, .risk-item-pro, .route-note-pro, .thresh-title, .thresh-row, .branch-title-ahvaz, .info-label-ahvaz, .info-value-ahvaz strong, .country-info-value, .country-info-label {
+      color: #cbd5e1;
+    }
+  }
+
+  .dash-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .dash-header h1 { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .dash-header .subtitle { font-size: 12px; color: var(--text-muted); }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 6px; font-weight: 500; border: 0.5px solid; }
+  .badge-info  { background: var(--info-bg);  color: var(--info-text);  border-color: var(--blue-mid); }
+  .badge-danger{ background: var(--danger-bg);color: var(--danger-text);border-color: var(--red-mid); }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .section-title .bar { width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0; }
+  .metric-card { background: var(--surface); border-radius: 8px; padding: 12px 14px; }
+  .metric-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+  .metric-value { font-size: 21px; font-weight: 500; color: var(--text); }
+  .metric-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+  .card-title { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .bar-label { font-size: 12px; color: var(--text-muted); min-width: 90px; }
+  .bar-track { flex: 1; background: var(--surface2); border-radius: 3px; height: 13px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-pct { font-size: 12px; font-weight: 500; min-width: 46px; text-align: left; }
+  .two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .kv-list { display: flex; flex-direction: column; gap: 5px; }
+  .kv-row { display: flex; justify-content: space-between; font-size: 11px; }
+  .kv-key { color: var(--text-muted); }
+  .kv-val { font-weight: 500; }
+  .inner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .inner-metric { background: var(--surface); border-radius: 8px; padding: 10px 12px; }
+  .inner-label { font-size: 10px; color: var(--text-dim); margin-bottom: 3px; }
+  .inner-value { font-size: 16px; font-weight: 500; }
+  .inner-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .ports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+  .port-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+  .port-card.featured { border: 2px solid var(--green-mid); }
+  .port-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); }
+  .port-name { font-size: 11px; font-weight: 500; }
+  .corridor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+  .corridor-card { border: 0.5px solid var(--border-med); border-radius: 8px; padding: 10px 12px; }
+  .corridor-card.featured { border: 2px solid var(--blue-mid); }
+  .corridor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .corridor-name { font-size: 11px; font-weight: 500; }
+  .corridor-sub  { font-size: 10px; color: var(--text-dim); margin-bottom: 6px; }
+  .bri-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .bri-card { background: var(--surface); border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .bri-value { font-size: 20px; font-weight: 500; }
+  .bri-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+  .tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+  .tag-danger  { background: var(--danger-bg);  color: var(--danger-text); }
+  .tag-success { background: var(--success-bg); color: var(--success-text); }
+  .tag-warning { background: var(--warning-bg); color: var(--warning-text); }
+  .tag-info    { background: var(--info-bg);    color: var(--info-text); }
+  .tag-muted   { background: var(--surface);    color: var(--text-muted);  border:0.5px solid var(--border); }
+  .alert { border-radius: 8px; padding: 8px 12px; font-size: 11px; margin-top: 6px; }
+  .alert-danger  { background: var(--danger-bg);  color: var(--danger-text); }
+  .alert-success { background: var(--success-bg); color: var(--success-text); }
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 10px 0 8px; }
+  .dash-footer { border-top: 0.5px solid var(--border); padding-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; align-items: center; }
+  .dash-footer p { font-size: 10px; color: var(--text-dim); }
+  .c-success { color: var(--success-text); }
+  .c-danger  { color: var(--danger-text); }
+  .c-warning { color: var(--warning-text); }
+  .c-info    { color: var(--info-text); }
+
+  .investment-placeholder-suggest { text-align: right; line-height: 2; color: #666; padding: 20px; background: #f9f9f9; border-radius: 12px; }
+  @media (prefers-color-scheme: dark) { .investment-placeholder-suggest { background: #2a2a28; color: #aaa; } }
+  
+  /* استایل‌های صفحه مقایسه بنادر */
+  .port-compare-wrapper { background: var(--bg); border-radius: 16px; overflow: hidden; }
+  .compare-tabs { display: flex; gap: 4px; padding: 16px 0 0; border-bottom: 1px solid var(--border); overflow-x: auto; flex-wrap: wrap; }
+  .compare-tab { padding: 8px 18px; border-radius: 24px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-muted); background: transparent; border: 1px solid transparent; white-space: nowrap; }
+  .compare-tab:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
+  .compare-tab.active { background: #185FA5; color: white; border-color: #185FA5; }
+  .compare-panel { display: none; padding: 24px 0; }
+  .compare-panel.active { display: block; }
+  
+  /* استایل‌های جدید برای صفحه کریدورها */
+  .corridors-tab-bar { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .corridors-tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 500; background: transparent; border: none; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all 0.2s; font-family: 'Vazirmatn', sans-serif; }
+  .corridors-tab-btn.active { color: #185FA5; border-bottom-color: #185FA5; }
+  .corridors-tab-pane { display: none; }
+  .corridors-tab-pane.active { display: block; }
+  
+  /* استایل‌های کریدور ابریشم */
+  .corridor-card-new { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
+  .corridor-header-new { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; border-bottom: 0.5px solid var(--border); }
+  .corridor-header-new:hover { background: var(--surface); }
+  .transport-badge-new { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
+  .badge-rail-new { background: #E1F5EE; color: #0F6E56; }
+  .badge-sea-new { background: #E6F1FB; color: #185FA5; }
+  .badge-multi-new { background: #EEEDFE; color: #534AB7; }
+  .badge-arctic-new { background: #FBEAF0; color: #993556; }
+  .badge-road-new { background: #FAEEDA; color: #854F0B; }
+  .risk-dot-new { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .risk-low-new { background: #639922; }
+  .risk-med-new { background: #EF9F27; }
+  .risk-high-new { background: #E24B4A; }
+  .chevron-new { font-size: 16px; color: var(--text-muted); transition: transform .2s; }
+  .chevron-new.open { transform: rotate(180deg); }
+  .corridor-body-new { display: none; padding: 0; }
+  .corridor-body-new.open { display: block; }
+  .tab-bar-new { display: flex; border-bottom: 0.5px solid var(--border); }
+  .tab-new { font-size: 12px; padding: 8px 14px; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -0.5px; }
+  .tab-new.active { color: var(--text); border-bottom-color: var(--text); }
+  .tab-content-new { display: none; padding: 14px 16px; }
+  .tab-content-new.active { display: block; }
+  .info-grid-new { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .metric-card-new { background: var(--surface); border-radius: 8px; padding: 10px 12px; }
+  .metric-label-new { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .metric-value-new { font-size: 15px; font-weight: 500; }
+  .metric-note-new { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+  .section-title-new { font-size: 12px; font-weight: 500; color: var(--text-muted); margin: 12px 0 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .tag-row-new { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .tag-new { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--surface); border: 0.5px solid var(--border); color: var(--text-muted); }
+  .tag-new.ok { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+  .tag-new.warn { background: #FAEEDA; color: #854F0B; border-color: #FAC775; }
+  .tag-new.danger { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
+  .route-steps-new { display: flex; flex-wrap: wrap; gap: 0; align-items: center; margin-bottom: 12px; }
+  .route-step-new { font-size: 11px; padding: 4px 10px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; }
+  .route-step-new.rail-s { background: #E1F5EE; color: #0F6E56; border-color: #9FE1CB; }
+  .route-step-new.sea-s { background: #E6F1FB; color: #185FA5; border-color: #B5D4F4; }
+  .route-step-new.road-s { background: #FAEEDA; color: #854F0B; border-color: #FAC775; }
+  .route-step-new.break-s { background: #EEEDFE; color: #534AB7; border-color: #CECBF6; }
+  .route-arrow-new { font-size: 14px; color: var(--text-dim); margin: 0 3px; }
+  .ref-box-new { background: var(--surface); border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
+  .ref-box-new p { font-size: 11px; color: var(--text-muted); line-height: 1.6; margin-bottom: 4px; }
+  .ref-box-new a { color: #185FA5; text-decoration: none; font-size: 11px; }
+  .ref-box-new a:hover { text-decoration: underline; }
+  .alert-box-new { padding: 10px 12px; border-radius: 8px; font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+  .alert-danger-new { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F7C1C1; }
+  .alert-warn-new { background: #FAEEDA; color: #854F0B; border: 0.5px solid #FAC775; }
+  .alert-ok-new { background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+  .legend-row-new { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+  .leg-item-new { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+  .leg-dot-new { width: 10px; height: 10px; border-radius: 50%; }
+  
+  /* استایل‌های جداول مقایسه */
+  .wrap-new { padding: 1rem 0; }
+  .top-new { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+  .top-new h1 { font-size: 17px; font-weight: 500; }
+  .src-badge-new { font-size: 10px; padding: 3px 9px; border-radius: 20px; background: var(--surface); border: 0.5px solid var(--border); color: var(--text-muted); }
+  .legend-new { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .li-new { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+  .ld-new { width: 10px; height: 10px; border-radius: 50%; }
+  .section-card-new { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
+  .sec-header-new { padding: 10px 14px; background: var(--surface); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .sec-header-new h2 { font-size: 13px; font-weight: 500; }
+  .sec-header-new .ref-inline-new { font-size: 10px; color: var(--text-dim); }
+  .tbl-wrap-new { overflow-x: auto; }
+  .tbl-wrap-new table { width: 100%; border-collapse: collapse; font-size: 11.5px; min-width: 680px; }
+  .tbl-wrap-new th { padding: 8px 10px; text-align: right; font-weight: 500; font-size: 11px; color: var(--text-muted); border-bottom: 0.5px solid var(--border); background: var(--surface); white-space: nowrap; }
+  .tbl-wrap-new td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .tbl-wrap-new td:first-child { font-weight: 500; font-size: 11px; white-space: nowrap; color: var(--text-muted); }
+  .badge-new { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; margin: 1px; }
+  .b-rail-new { background: #E1F5EE; color: #0F6E56; }
+  .b-sea-new { background: #E6F1FB; color: #185FA5; }
+  .b-multi-new { background: #EEEDFE; color: #534AB7; }
+  .b-arc-new { background: #FBEAF0; color: #993556; }
+  .b-road-new { background: #FAEEDA; color: #854F0B; }
+  .b-ok-new { background: #EAF3DE; color: #3B6D11; }
+  .b-warn-new { background: #FAEEDA; color: #854F0B; }
+  .b-danger-new { background: #FCEBEB; color: #A32D2D; }
+  .b-na-new { background: var(--surface); color: var(--text-dim); font-style: italic; }
+  .risk-row-new { display: flex; align-items: center; gap: 5px; }
+  .rdot-new { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .r-lo-new { background: #639922; }
+  .r-me-new { background: #EF9F27; }
+  .r-hi-new { background: #E24B4A; }
+  .note-new { font-size: 10px; color: var(--text-dim); display: block; margin-top: 1px; }
+  .bri-grid-new { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 14px; }
+  .bri-card-new { background: var(--surface); border-radius: 8px; padding: 10px 12px; }
+  .bri-label-new { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+  .bri-val-new { font-size: 15px; font-weight: 500; }
+  .bri-sub-new { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+  .col-hi-new { background: var(--surface2); }
+
+  /* استایل صفحه کشتیرانی */
+  .shipping-section-wrapper {
+    background: var(--bg);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* استایل‌های جدید برای کارت بنادر در صفحه مقایسه */
+  .port-card-pro {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+  }
+  .port-card-pro.active {
+    border: 2px solid #185FA5;
+    background: #f8fafc;
+  }
+  .port-name-pro {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .port-country-pro {
+    font-size: 11px;
+    color: #5b6e8c;
+    margin-top: 2px;
+  }
+  .score-ring-pro {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: 700;
+    border: 2px solid;
+    background: #f8fafc;
+  }
+  .sr-green-pro { border-color: #22c55e; color: #22c55e; }
+  .sr-amber-pro { border-color: #f59e0b; color: #f59e0b; }
+  .sr-red-pro { border-color: #ef4444; color: #ef4444; }
+  .fatf-clean-pro { background: #22c55e10; color: #22c55e; border-color: #22c55e30; }
+  .fatf-watch-pro { background: #f59e0b10; color: #f59e0b; border-color: #f59e0b30; }
+  .fatf-grey-pro { background: #ef444410; color: #ef4444; border-color: #ef444430; }
+  .port-stat-label-pro { color: #5b6e8c; }
+  .port-stat-value-pro { font-weight: 500; color: #0f172a; }
+  
+  .detail-panel-pro {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+  }
+  .detail-header-pro {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .filter-btn-pro {
+    font-size: 12px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    font-family: 'Vazirmatn', sans-serif;
+  }
+  .filter-btn-pro.active {
+    background: #185FA5;
+    color: white;
+    border-color: #185FA5;
+  }
+  
+  .route-card-pro {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .route-node-pro {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #334155;
+  }
+  .rf-pro {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .risk-item-pro {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+<div class="page-header">
+  <div>
+    <h1>پلتفرم اختصاصی راه دانا    </h1>
+    <p> تحلیل کریدورهای چین به اروپا و بنادر و مرزهای ایران | بروزرسانی: می ۲۰۲۶</p>
+  </div>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <button class="nav-btn active" onclick="showDash('main')">دیده‌بان راه</button>
+    <button class="nav-btn" onclick="showDash('carec')">کریدورهای BRI</button>
+    <button class="nav-btn" onclick="showDash('borders')">بنادر و مرزهای ایران</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ========== صفحه اول: دیده‌بان راه (فقط نقشه) ========== -->
+<div id="dash-main" class="dash-section active">
+  <div class="google-map-card">
+    <iframe class="google-map-frame" 
+      src="https://www.google.com/maps/d/embed?mid=1aDX7mGtJGuRET29CW8nl9KPxfotrn3Y&ll=31.80909037503909%2C64.40907510300246&z=6" 
+      title="Google My Maps - کریدورهای اختصاصی چین به ایران | صنایع بالادستی انرژی"
+      allowfullscreen>
+    </iframe>
+    <div class="map-footer-note">
+      <span><span class="legend-dot" style="background:#E24B4A;"></span> کریدور شمالی — Trans-Siberian (Trans-Siberian / Northern)</span>
+      <span><span class="legend-dot" style="background:#1D9E75;"></span> کریدور میانی — TITR (Trans-Caspian / Middle Corridor)</span>
+      <span><span class="legend-dot" style="background:#185FA5;"></span> راه ابریشم آبی (Maritime Silk Road)</span>
+      <span><span class="legend-dot" style="background:#F5A623;"></span> کریدور قطبی — NSR (Polar Silk Road / Northern Sea Route)</span>
+    </div>
+    <div style="background:#fff8ed;border-top:1px solid #fbe8cf;padding:12px 24px;font-size:11.5px;color:#9a6a2c;line-height:1.9;text-align:center;">
+      💡 این داشبورد برای اهداف تحقیقاتی است. داده‌های عملیاتی، تعرفه‌های دقیق و شرایط گمرکی باید از اپراتورهای لجستیکی معتبر دریافت شوند. کلیک روی هر نقطه از نقشه، اطلاعات تکمیلی کریدور مربوطه را نشان می‌دهد.
+    </div>
+  </div>
+</div>
+
+<!-- ========== صفحه دوم: کریدورهای بین‌المللی ========== -->
+<div id="dash-carec" class="dash-section">
+  <div class="corridors-tab-bar">
+    <button class="corridors-tab-btn active" onclick="switchCorridorsTab('analysis')">📈🔍 تحلیل کریدورهای کلی چین به اروپا</button>
+    <button class="corridors-tab-btn" onclick="switchCorridorsTab('comparison')">🆚 جداول مقایسه جامع کریدورهای اصلی </button>
+  </div>
+  
+  <div id="corridors-tab-analysis" class="corridors-tab-pane active">
+    <div class="legend-row-new">
+      <div class="leg-item-new"><div class="leg-dot-new" style="background:#639922"></div>ریسک پایین</div>
+      <div class="leg-item-new"><div class="leg-dot-new" style="background:#EF9F27"></div>ریسک متوسط</div>
+      <div class="leg-item-new"><div class="leg-dot-new" style="background:#E24B4A"></div>ریسک بالا</div>
+    </div>
+
+    <!-- CORRIDOR 1: Trans-Siberian -->
+    <div class="corridor-card-new" id="c1">
+      <div class="corridor-header-new" onclick="toggleCorridorNew('c1')">
+        <div class="risk-dot-new risk-high-new"></div>
+        <span class="transport-badge-new badge-rail-new">ریلی</span>
+        <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">کریدور شمالی — Trans-Siberian <span style="font-size:11px;color:var(--text-muted);">(Trans-Siberian / Northern)</span></h3></div>
+        <i class="chevron-new" id="c1-chev" aria-hidden="true">🔻</i>
+      </div>
+      <div class="corridor-body-new" id="c1-body">
+        <div class="tab-bar-new">
+          <div class="tab-new active" onclick="switchTabNew('c1','infra')">زیرساخت</div>
+          <div class="tab-new" onclick="switchTabNew('c1','cost')">هزینه‌ها</div>
+          <div class="tab-new" onclick="switchTabNew('c1','risk')">ریسک و امنیت</div>
+          <div class="tab-new" onclick="switchTabNew('c1','cargo')">بار و ظرفیت</div>
+          <div class="tab-new" onclick="switchTabNew('c1','ref')">منابع</div>
+        </div>
+        <div class="tab-content-new active" id="c1-infra">
+          <div class="section-title-new">مسیر و نوع زیرساخت</div>
+          <div class="route-steps-new">
+            <span class="route-step-new rail-s">چین (Vladivostok)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new break-s">تغییر گیج ریل از ۱۴۳۵ به ۱۵۲۰ میلی‌متر (استاندارد روسیه)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">ترانس‌سیبری / BAM</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">مسکو</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new break-s">تغییر عرض ریل از گیج روسی (۱۵۲۰ میلی‌متر) به گیج استاندارد (۱۴۳۵ میلی‌متر)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">اروپا (برست/مالاشویچه)</span>
+          </div>
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">طول کل مسیر</div><div class="metric-value-new">در حدود ۹,۲۰۰ کیلومتر</div><div class="metric-note-new">چین تا اروپای غربی</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">زمان ترانزیت</div><div class="metric-value-new">۱۵–۲۲ روز</div><div class="metric-note-new">در شرایط عادی (پیش از ۲۰۲۲: ۱۵–۱۹ روز)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">گیج ریل روسیه</div><div class="metric-value-new">۱۵۲۰ mm</div><div class="metric-note-new">ناسازگار با اروپا و چین (۱۴۳۵mm)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">حجم ترانزیت ۲۰۲۴</div><div class="metric-value-new">۷۴۵,۹۰۰ TEU (کل اوراسیا)</div><div class="metric-note-new">از این مقدار ۳۸۰,۴۳۴ TEU مربوط به مسیر China-EU-China است (UTLC ERA، ۲۰۲۵)</div></div>
+          </div>
+          <div class="section-title-new">محدودیت‌های زیرساختی</div>
+          <div class="tag-row-new">
+            <span class="tag-new danger">تنگناهای شرقی BAM/TSR</span>
+            <span class="tag-new danger">تحریم‌های تجهیزات لوکوموتیو</span>
+            <span class="tag-new warn">دو نقطه تغییر گیج</span>
+            <span class="tag-new warn">اشباع ظرفیت در اولویت‌بندی نظامی</span>
+          </div>
+          <div class="alert-warn-new alert-box-new">📉 در ۲۰۲۵ کل ترافیک اوراسیا به ۵۷۲,۳۰۰ TEU رسید — کاهش ۱۴.۱درصد نسبت به ۲۰۲۴ (ERAI، آوریل ۲۰۲۶). رقابت کرایه دریایی ارزان‌تر عامل اصلی کاهش بوده است.</div>
+        </div>
+        <div class="tab-content-new" id="c1-cost">
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">هزینه حمل (FEU)</div><div class="metric-value-new">تقریبا  ً ۳,۲۴۰ دلار</div><div class="metric-note-new">میانگین ۲۰۲۴ (ERA Index)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">هزینه توقف مرزی</div><div class="metric-value-new">۱۵۰ تا ۴۰۰ دلار در روز</div><div class="metric-note-new">برست، مالاشویچه</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">هزینه تغییر گیج</div><div class="metric-value-new">نرخ هر TEU بین ۸۰ تا ۲۰۰ دلار است</div><div class="metric-note-new">هر نقطه تعویض بوگی و باربرداری</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">بیمه اضافی</div><div class="metric-value-new">نیم تا دو درصد اضافه‌کارمزد</div><div class="metric-note-new">ریسک سیاسی و تحریم</div></div>
+          </div>
+          <div class="alert-warn-new alert-box-new">🚨 از اوایل ۲۰۲۲، اکثر شرکت‌های اروپایی از این مسیر خارج شدند. استفاده از این کریدور ممکن است با قوانین تحریم EU/US تداخل داشته باشد.</div>
+        </div>
+        <div class="tab-content-new" id="c1-risk">
+          <div class="alert-danger-new alert-box-new">📢 ریسک بسیار بالا: این مسیر به دلیل جنگ روسیه-اوکراین و تحریم‌های گسترده برای اکثر شرکت‌های اروپایی و آمریکایی عملاً مسدود است.</div>
+          <div class="section-title-new">ریسک‌های اصلی</div>
+          <div class="tag-row-new">
+            <span class="tag-new danger">تحریم‌های گسترده EU/US/UK</span>
+            <span class="tag-new danger">ریسک مصادره کانتینر در روسیه</span>
+            <span class="tag-new danger">عدم دسترسی به بیمه بین‌المللی (Lloyd's خارج شده)</span>
+            <span class="tag-new warn">تنش ژئوپلیتیک ادامه‌دار</span>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c1-cargo">
+          <div class="section-title-new">انواع بار مناسب</div>
+          <div class="tag-row-new">
+            <span class="tag-new">الکترونیک و فناوری</span>
+            <span class="tag-new">خودروهای چینی به روسیه</span>
+            <span class="tag-new">مواد اولیه صنعتی</span>
+          </div>
+          <div class="section-title-new">توانایی بار حجیم</div>
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">بار حجیم OOG</div><div class="metric-value-new">محدود</div><div class="metric-note-new">نیاز به مجوز ویژه RZD</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">حداکثر وزن واگن</div><div class="metric-value-new">۶۸–۷۵ تن</div><div class="metric-note-new">استاندارد واگن روسی</div></div>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c1-ref">
+          <div class="ref-box-new">
+            <p><strong>منابع معتبر مورد استفاده (۲۰۲۴–۲۰۲۶):</strong></p>
+            <p>• <a href="https://united24media.com/latest-news/true-state-of-russian-economy-revealed-by-collapsing-railway-cargo-data-18266" target="_blank">UNITED24 Media — "Railway Freight Data Reveals Severe Decline in Russian Economy" (آوریل ۲۰۲۶)</a></p>
+            <p>• <a href="https://www.utlc.com/en/press-center/detail/analysis-of-utlc-era-container-shipment-growth-between-china-and-europe/" target="_blank">UTLC ERA — "Analysis of Container Shipment Growth China-Europe" (جولای ۲۰۲۵)</a></p>
+            <p>• <a href="https://trans.info/en/cheaper-sea-freight-467092" target="_blank">Trans.info — "Cheaper Sea Freight Pulled Cargo off Eurasian Rail in 2025" (آوریل ۲۰۲۶)</a></p>
+            <p>• <a href="https://www.automotivelogistics.media/logistics-service-providers/red-sea-crisis-resurrects-china-europe-rail-freight-transit-through-russia/189407" target="_blank">Automotive Logistics — "Red Sea crisis resurrects China-Europe rail freight" (۲۰۲۴)</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- CORRIDOR 2: TITR -->
+    <div class="corridor-card-new" id="c2">
+      <div class="corridor-header-new" onclick="toggleCorridorNew('c2')">
+        <div class="risk-dot-new risk-med-new"></div>
+        <span class="transport-badge-new badge-multi-new">چندوجهی</span>
+        <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">کریدور میانی — TITR <span style="font-size:11px;color:var(--text-muted);">(Trans-Caspian / Middle Corridor)</span></h3></div>
+        <i class="chevron-new" id="c2-chev" aria-hidden="true">🔻</i>
+      </div>
+      <div class="corridor-body-new" id="c2-body">
+        <div class="tab-bar-new">
+          <div class="tab-new active" onclick="switchTabNew('c2','infra')">زیرساخت</div>
+          <div class="tab-new" onclick="switchTabNew('c2','cost')">هزینه‌ها</div>
+          <div class="tab-new" onclick="switchTabNew('c2','risk')">ریسک و امنیت</div>
+          <div class="tab-new" onclick="switchTabNew('c2','cargo')">بار و ظرفیت</div>
+          <div class="tab-new" onclick="switchTabNew('c2','ref')">منابع</div>
+        </div>
+ 
+        <!-- TAB: زیرساخت -->
+        <div class="tab-content-new active" id="c2-infra">
+          <div class="section-title-new">مسیر کامل ریلی از چین به اروپا</div>
+          <div class="route-steps-new">
+            <span class="route-step-new rail-s">چین (کاشغر/اورومچی)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new break-s">تغییر گیج ریل از ۱۴۳۵ به ۱۵۲۰ میلی‌متر</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">قزاقستان</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">Ferry Boat دریای خزر از آکتاو یا کوریک به باکو</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">BTK: مسیر باکو به تفلیس به قارص</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new break-s">تغییر گیج قبل از قارص به سمت استانبول</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">ترکیه به اروپا</span>
+          </div>
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">طول کل مسیر</div><div class="metric-value-new">در حدود ۸,۷۰۰ کیلومتر</div><div class="metric-note-new">چین تا اروپای مرکزی</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">زمان ترانزیت</div><div class="metric-value-new">۱۸–۲۵ روز</div><div class="metric-note-new">هدف ۱۴–۱۵ روز تا ۲۰۲۵ (TITR Coordination Center)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">حجم ۲۰۲۴ (کل سال)</div><div class="metric-value-new">۴.۵ میلیون تن / تقریبا  ۵۵,۰۰۰ TEU</div><div class="metric-note-new">رشد ۶۳درصد نسبت به ۲۰۲۳ | ظرفیت فعلی: ۶ میلیون تن / ۱۰۰,۰۰۰ TEU در سال</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">Ferry Boat دریای خزر</div><div class="metric-value-new">۳–۵ روز</div><div class="metric-note-new">تأخیر رایج: صف انتظار</div></div>
+          </div>
+          <div class="alert-ok-new alert-box-new">📢 در مه ۲۰۲۴، بخش ۱۸۴ کیلومتری گرجستان در خط BTK کاملاً بازسازی شد. ظرفیت از ۱ به ۵ میلیون تن رسید (سرمایه‌گذاری ۲۵۰ میلیون دلاری آذربایجان).</div>
+ 
+          <!-- BTK SUB-CORRIDOR -->
+          <div class="sub-corridor-connector-new">
+            <span class="sub-connector-dot-new"></span>
+            <span>بخش کلیدی این کریدور — باکو–تفلیس–قارص (BTK)</span>
+          </div>
+ 
+          <div class="corridor-card-new sub-corridor-new" id="c3">
+            <div class="corridor-header-new" onclick="toggleCorridorNew('c3')">
+              <div class="risk-dot-new risk-low-new"></div>
+              <span class="transport-badge-new badge-rail-new">ریلی</span>
+              <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">باکو–تفلیس–قارص <span style="font-size:11px;color:var(--text-muted);">(BTK)</span></h3></div>
+              <i class="chevron-new" id="c3-chev" aria-hidden="true">🔻</i>
+            </div>
+            <div class="corridor-body-new" id="c3-body">
+              <div class="tab-bar-new">
+                <div class="tab-new active" onclick="switchTabNew('c3','infra')">زیرساخت</div>
+                <div class="tab-new" onclick="switchTabNew('c3','cost')">هزینه‌ها</div>
+                <div class="tab-new" onclick="switchTabNew('c3','risk')">ریسک</div>
+                <div class="tab-new" onclick="switchTabNew('c3','ref')">منابع</div>
+              </div>
+ 
+              <!-- TAB: زیرساخت -->
+              <div class="tab-content-new active" id="c3-infra">
+                <div class="route-steps-new">
+                  <span class="route-step-new rail-s">باکو (آذربایجان)</span>
+                  <span class="route-arrow-new">←</span>
+                  <span class="route-step-new rail-s">تفلیس (گرجستان)</span>
+                  <span class="route-arrow-new">←</span>
+                  <span class="route-step-new break-s">تغییر گیج قارص از ۱۵۲۰ به ۱۴۳۵</span>
+                  <span class="route-arrow-new">←</span>
+                  <span class="route-step-new rail-s">قارص (ترکیه)</span>
+                </div>
+                <div class="info-grid-new">
+                  <div class="metric-card-new"><div class="metric-label-new">طول خط</div><div class="metric-value-new">۸۲۶ کیلومتر</div><div class="metric-note-new">بیش از ۵۰۰ کیلومتر از مسیر در داخل آذربایجان</div></div>
+                  <div class="metric-card-new"><div class="metric-label-new">ظرفیت پس از ارتقاء</div><div class="metric-value-new">۵ میلیون تن در سال</div><div class="metric-note-new">پس از بازسازی بخش ۱۸۴ کیلومتری گرجستان (مه ۲۰۲۴)</div></div>
+                  <div class="metric-card-new"><div class="metric-label-new">هدف ظرفیت ۲۰۳۴</div><div class="metric-value-new">۱۷ میلیون تن</div><div class="metric-note-new">بر اساس اظهارات مقامات ترکیه</div></div>
+                </div>
+                <div class="alert-ok-new alert-box-new">📢 بخش گرجستان (۱۸۴ کم): ۵ مرحله بازسازی کامل انجام شد. سرمایه‌گذاری ۲۵۰ میلیون دلاری آذربایجان. شرکت مشترک BTKİ Railways ایجاد شد (ADY + Marabda-Kartsakhi Railway).</div>
+              </div>
+ 
+              <!-- TAB: هزینه‌ها -->
+              <div class="tab-content-new" id="c3-cost">
+                <div class="info-grid-new">
+                  <div class="metric-card-new"><div class="metric-label-new">تعرفه BTK به ازای تن</div><div class="metric-value-new">رقابتی</div><div class="metric-note-new">MoU آذربایجان–ترکیه–گرجستان اکتبر ۲۰۲۵</div></div>
+                  <div class="metric-card-new"><div class="metric-label-new">تعویض بوگی قارص</div><div class="metric-value-new">۸۰ تا ۱۵۰ دلار به ازای هر واگن</div><div class="metric-note-new">از ۱۵۲۰ به ۱۴۳۵ میلی‌متر</div></div>
+                </div>
+              </div>
+ 
+              <!-- TAB: ریسک -->
+              <div class="tab-content-new" id="c3-risk">
+                <div class="alert-ok-new alert-box-new">🌱 ریسک پایین — مسیر سیاسی مطمئن، بدون تحریم، کریدور استراتژیک EU/BRI.</div>
+              </div>
+ 
+              <!-- TAB: منابع -->
+              <div class="tab-content-new" id="c3-ref">
+                <div class="ref-box-new">
+                  <p>• <a href="https://caspiannews.com/news-detail/middle-corridor-freight-volumes-rise-70-in-2024-2024-10-10-0/" target="_blank">Caspian News — "BTK Railway Expansion / Middle Corridor Growth" (۲۰۲۴)</a></p>
+                  <p>• <a href="https://jamestown.org/middle-corridor-makes-progress-toward-operational-reality/" target="_blank">Jamestown — "Middle Corridor Makes Progress Toward Operational Reality" (آوریل ۲۰۲۶)</a></p>
+                  <p>• <a href="https://www.trasportoeuropa.it/english/freight-traffic-rises-in-2024-along-the-middle-corridor/" target="_blank">TrasportoEuropa — "Freight Traffic Rises in 2024 Along Middle Corridor" (مارس ۲۰۲۵)</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END BTK SUB-CORRIDOR -->
+ 
+        </div>
+ 
+        <!-- TAB: هزینه‌ها -->
+        <div class="tab-content-new" id="c2-cost">
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">هزینه حمل TEU (چین–ترکیه)</div><div class="metric-value-new">از ۵ هزار دلار تا ۷ هزار دلار</div><div class="metric-note-new">index1520 / SeaRates 2024</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">هزینه Ferry Boat خزر</div><div class="metric-value-new">از ۳۰۰ دلار تا ۶۰۰ دلار/TEU</div><div class="metric-note-new">بسته به اپراتور</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">هزینه گمرک اداری</div><div class="metric-value-new">دویست تا پانصد دلار برای هر محموله</div><div class="metric-note-new">۵ کشور مستقل</div></div>
+          </div>
+        </div>
+ 
+        <!-- TAB: ریسک و امنیت -->
+        <div class="tab-content-new" id="c2-risk">
+          <div class="alert-ok-new alert-box-new">🌟 کم‌ریسک‌ترین مسیر ترانس‌اوراسیایی برای شرکت‌های غربی در ۲۰۲۴–۲۰۲۵ — از قلمرو روسیه و بلاروس عبور نمی‌کند.</div>
+          <div class="tag-row-new">
+            <span class="tag-new warn">ریسک تأخیر Ferry Boat خزر</span>
+            <span class="tag-new warn">وابستگی به ۵ دولت مستقل</span>
+            <span class="tag-new ok">بدون تحریم فعلی</span>
+          </div>
+        </div>
+ 
+        <!-- TAB: بار و ظرفیت -->
+        <div class="tab-content-new" id="c2-cargo">
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">حجم ۲۰۲۴ (کل سال)</div><div class="metric-value-new">۴.۵ میلیون تن</div><div class="metric-note-new">رشد ۶۳درصد نسبت به ۲۰۲۳ (Kazakhstan Ministry of Transport)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">TEU چینی ۲۰۲۴</div><div class="metric-value-new">بیش از ۲۷,۰۰۰ TEU</div><div class="metric-note-new">رشد ۲۰ برابری ترانزیت چینی از ابتدای ۲۰۲۴ (وزارت حمل‌ونقل قزاقستان)</div></div>
+          </div>
+          <div class="section-title-new">انواع بار مناسب</div>
+          <div class="tag-row-new">
+            <span class="tag-new">الکترونیک و نیمه‌هادی</span>
+            <span class="tag-new">خودرو و قطعات</span>
+            <span class="tag-new">ماشین‌آلات صنعتی</span>
+          </div>
+        </div>
+ 
+        <!-- TAB: منابع -->
+        <div class="tab-content-new" id="c2-ref">
+          <div class="ref-box-new">
+            <p>• <a href="https://astanatimes.com/2024/12/cargo-transport-via-middle-corridor-surges-to-4-1-million-tons-in-11-months/" target="_blank">Astana Times — "Cargo Transport via Middle Corridor Surges" (دسامبر ۲۰۲۴)</a></p>
+            <p>• <a href="https://caspiannews.com/news-detail/trans-caspian-international-transport-route-sets-new-record-in-2024-2024-12-18-27/" target="_blank">Caspian News — "TITR Sets New Record in 2024" (دسامبر ۲۰۲۴)</a></p>
+            <p>• <a href="https://www.newsilkroaddiscovery.com/transit-through-middle-corridor-to-grow-3-4-times/" target="_blank">New Silk Road Discovery — "Transit through Middle Corridor to grow 3-4 times" (۲۰۲۵)</a></p>
+            <p>• <a href="https://index1520.com/en/analytics/transkaspiyskiy-mezhdunarodnyy-transportnyy-marshrut-i-drugie-perspektivnye-koridory-v-tsentralnoy-a/" target="_blank">Index1520 — "Trans-Caspian Route and Other Corridors in Central Asia" (۲۰۲۴)</a></p>
+            <p>• <a href="https://jamestown.org/middle-corridor-makes-progress-toward-operational-reality/" target="_blank">Jamestown Foundation — "Middle Corridor Makes Progress" (آوریل ۲۰۲۶)</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END CORRIDOR 2: TITR -->
+ 
+ 
+    <!-- CSS اضافی برای نمایش nested BTK -->
+    <style>
+    .sub-corridor-new {
+      margin-top: 16px;
+      border: 1px solid var(--border-color, #d0e8d0);
+      border-radius: 10px;
+      background: var(--bg-sub, rgba(0,120,60,0.03));
+    }
+    .sub-corridor-connector-new {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 8px 12px;
+      background: rgba(0,120,60,0.06);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-muted, #666);
+      border: 0.5px solid rgba(0,120,60,0.2);
+    }
+    .sub-connector-dot-new {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3B6D11;
+      flex-shrink: 0;
+    }
+    </style>
+ 
+ 
+    <!-- CORRIDOR 4: CKU -->
+    <div class="corridor-card-new" id="c4">
+      <div class="corridor-header-new" onclick="toggleCorridorNew('c4')">
+        <div class="risk-dot-new risk-med-new"></div>
+        <span class="transport-badge-new badge-rail-new">ریلی</span>
+        <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">چین-قرقیزستان-ازبکستان <span style="font-size:11px;color:var(--text-muted);">(CKU)</span></h3></div>
+        <i class="chevron-new" id="c4-chev" aria-hidden="true">🔻</i>
+      </div>
+      <div class="corridor-body-new" id="c4-body">
+        <div class="tab-bar-new">
+          <div class="tab-new active" onclick="switchTabNew('c4','infra')">زیرساخت</div>
+          <div class="tab-new" onclick="switchTabNew('c4','cost')">تأمین مالی</div>
+          <div class="tab-new" onclick="switchTabNew('c4','risk')">ریسک و وضعیت</div>
+          <div class="tab-new" onclick="switchTabNew('c4','extensions')">مسیرهای ادامه</div>
+          <div class="tab-new" onclick="switchTabNew('c4','ref')">منابع</div>
+        </div>
+ 
+        <!-- TAB: زیرساخت -->
+        <div class="tab-content-new active" id="c4-infra">
+          <div class="alert-warn-new alert-box-new">💥 این کریدور در حال ساخت است. هدف رسمی تکمیل: ۲۰۳۰ | احتمال واقعی با تأخیرات: ۲۰۳۱–۲۰۳۲</div>
+          <div class="route-steps-new">
+            <span class="route-step-new rail-s">کاشغر (چین)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new break-s">گذر تورگارت</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">ماکمال (قرقیزستان)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new break-s">تغییر گیج: از ۱۴۳۵ به ۱۵۲۰ میلیمتر</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">جلال‌آباد (قرقیزستان)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">اندیجان (ازبکستان)</span>
+          </div>
+          <div class="info-grid-new">
+            <div class="metric-card-new">
+              <div class="metric-label-new">طول کل</div>
+              <div class="metric-value-new">تقریبا  ۵۶۷ کیلومتر</div>
+              <div class="metric-note-new">چین ۲۱۳ کم + قرقیزستان ۳۰۴ کم + ازبکستان ۵۰ کم (منابع رسمی: Times of Central Asia، دسامبر ۲۰۲۵)</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">پل‌ها و تونل‌ها</div>
+              <div class="metric-value-new">۵۰ پل + ۲۹ تونل</div>
+              <div class="metric-note-new">جمع طول تونل‌ها ۱۲۰ کم — ۴۰درصد کل مسیر (قرارداد مالی دسامبر ۲۰۲۵)</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">وضعیت</div>
+              <div class="metric-value-new">در حال ساخت</div>
+              <div class="metric-note-new">مراسم آغاز رسمی: ۲۷ دسامبر ۲۰۲۴ در جلال‌آباد | حفاری تونل‌ها از اوایل ۲۰۲۵</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">هدف تکمیل</div>
+              <div class="metric-value-new">۲۰۳۰</div>
+              <div class="metric-note-new">رئیس‌جمهور جاپاروف، مارس ۲۰۲۶ | ساخت بخش قرقیزستان تخمیناً ۶ سال</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">ظرفیت باری</div>
+              <div class="metric-value-new">تا ۱۵ میلیون تن/سال</div>
+              <div class="metric-note-new">در مقایسه: مسیر چین-قزاقستان در ۲۰۲۴ رکورد ۳۲ میلیون تن ثبت کرد</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">کاهش زمان ترانزیت</div>
+              <div class="metric-value-new">۷ روز کمتر</div>
+              <div class="metric-note-new">مسیر تقریبا  ۹۰۰ کم کوتاه‌تر به اروپا نسبت به مسیرهای موجود</div>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- TAB: تأمین مالی -->
+        <div class="tab-content-new" id="c4-cost">
+          <div class="info-grid-new">
+            <div class="metric-card-new">
+              <div class="metric-label-new">هزینه کل پروژه</div>
+              <div class="metric-value-new">$۴.۷ میلیارد</div>
+              <div class="metric-note-new">قرارداد مالی امضاشده: ۱۶ دسامبر ۲۰۲۵ در بیشکک</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">وام چین</div>
+              <div class="metric-value-new">$۲.۳ میلیارد</div>
+              <div class="metric-note-new">بازپرداخت ۳۵ ساله | بانک توسعه چین + بانک صادرات و واردات چین | بازپرداخت توسط شرکت مشترک</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">سهام شرکت مشترک</div>
+              <div class="metric-value-new">چین ۵۱درصد</div>
+              <div class="metric-note-new">قرقیزستان ۲۴.۵درصد + ازبکستان ۲۴.۵درصد | مدل BOT | باقی $۲.۳ میلیارد به عنوان سرمایه سهام شرکت مشترک</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">سهم سهام قرقیزستان</div>
+              <div class="metric-value-new">تقریبا  $۵۶۳ میلیون</div>
+              <div class="metric-note-new">۲۴.۵درصد از $۲.۳ میلیارد سرمایه سهام | بودجه ۲۰۲۵ قرقیزستان: $۱۳۰.۵ میلیون اختصاص‌یافته به شرکت مشترک</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">سهم سهام ازبکستان</div>
+              <div class="metric-value-new">تقریبا  $۵۶۳ میلیون</div>
+              <div class="metric-note-new">۲۴.۵درصد از $۲.۳ میلیارد سرمایه سهام</div>
+            </div>
+          </div>
+          <div class="alert-warn-new alert-box-new">⚠️ ریسک بدهی: اقتصاددانان قرقیزی نسبت به وابستگی فزاینده مالی به چین هشدار می‌دهند. مقامات پارلمان این ریسک را رد می‌کنند. هزینه هر کیلومتر: تقریبا  $۱۶.۸ میلیون (زمین‌شناسی کوهستانی).</div>
+        </div>
+ 
+        <!-- TAB: ریسک و وضعیت -->
+        <div class="tab-content-new" id="c4-risk">
+          <div class="info-grid-new">
+            <div class="metric-card-new">
+              <div class="metric-label-new">وضعیت فعلی (ژوئن ۲۰۲۶)</div>
+              <div class="metric-value-new">در حال ساخت</div>
+              <div class="metric-note-new">حفاری تونل‌ها از اوایل ۲۰۲۵ | تسویه اختلافات مرزی فرغانه در مارس ۲۰۲۵ محقق شد</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">ریسک تأخیر</div>
+              <div class="metric-value-new">بالا</div>
+              <div class="metric-note-new">پیچیدگی فنی کوهستانی | ۲۹ تونل با جمع طول ۱۲۰ کم | زمین‌شناسی دشوار | پروژه‌های مشابه BRI اغلب تأخیر دارند</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">رقبای مسیر</div>
+              <div class="metric-value-new">متوسط</div>
+              <div class="metric-note-new">مسیر ترانس‌خزری (TITR) از ۲۰۲۲ رشد زیادی داشته | CKU نقش مکمل خواهد داشت نه جایگزین</div>
+            </div>
+            <div class="metric-card-new">
+              <div class="metric-label-new">ریسک ژئوپلیتیک</div>
+              <div class="metric-value-new">پایین-متوسط</div>
+              <div class="metric-note-new">CKU مسیر روسیه را دور می‌زند | کاهش نفوذ ترانزیتی مسکو | حمایت سه کشور پابرجاست</div>
+            </div>
+          </div>
+          <div class="alert-warn-new alert-box-new">🚫 تا تکمیل این مسیر (۲۰۳۰+)، هیچ ترانزیت ریلی عملیاتی وجود ندارد. برای برنامه‌ریزی فعلی از این کریدور استفاده نشود.</div>
+        </div>
+ 
+        <!-- TAB: مسیرهای ادامه -->
+        <div class="tab-content-new" id="c4-extensions">
+          <div class="alert-warn-new alert-box-new" style="margin-bottom:12px;">🗺️ CKU پس از اندیجان (ازبکستان) به چند مسیر امتداد می‌یابد. هیچ‌کدام هنوز عملیاتی نیستند.</div>
+ 
+          <!-- شاخه ۱: اروپا از طریق ایران -->
+          <div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="font-weight:600;font-size:13px;margin-bottom:8px;">🇪🇺 مسیر A — اروپا از طریق ترکمنستان-ایران-ترکیه</div>
+            <div class="route-steps-new" style="flex-wrap:wrap;gap:4px;">
+              <span class="route-step-new rail-s">اندیجان</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">تاشکند</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">ترکمنستان</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">سرخس (ایران)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">مشهد</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">ترکیه</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">اروپا</span>
+            </div>
+            <div class="info-grid-new" style="margin-top:8px;">
+              <div class="metric-card-new">
+                <div class="metric-label-new">وضعیت خط سرخس-مشهد</div>
+                <div class="metric-value-new">عملیاتی</div>
+                <div class="metric-note-new">خط سرخس-تجن-مشهد از ۱۹۹۶ فعال | متصل به شبکه ایران-ترکیه-اروپا</div>
+              </div>
+              <div class="metric-card-new">
+                <div class="metric-label-new">سرویس جدید چین-لهستان از ایران</div>
+                <div class="metric-value-new">۳ مارس ۲۰۲۵</div>
+                <div class="metric-note-new">خط کانتینری چین-قزاقستان-ترکمنستان-ایران-ترکیه-لهستان فعال شد</div>
+              </div>
+              <div class="metric-card-new">
+                <div class="metric-label-new">ریسک ایران</div>
+                <div class="metric-value-new">بالا</div>
+                <div class="metric-note-new">تحریم‌های غربی | محدودیت بانکی | عدم استفاده برای محموله‌های اروپایی توصیه می‌شود</div>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- شاخه ۲: پاکستان -->
+          <div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="font-weight:600;font-size:13px;margin-bottom:8px;">🇵🇰 مسیر B — پاکستان (کراچی / گوادر) از طریق افغانستان</div>
+            <div class="route-steps-new" style="flex-wrap:wrap;gap:4px;">
+              <span class="route-step-new rail-s">اندیجان / تاشکند</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">ترمز (مرز افغانستان)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new break-s">افغانستان (مسیر UAP در دست مطالعه)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">خارلاچی (مرز پاکستان)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">کراچی / گوادر</span>
+            </div>
+            <div class="info-grid-new" style="margin-top:8px;">
+              <div class="metric-card-new">
+                <div class="metric-label-new">پروژه UAP</div>
+                <div class="metric-value-new">در مرحله مطالعه</div>
+                <div class="metric-note-new">موافقتنامه سه‌جانبه ازبکستان-افغانستان-پاکستان: ۱۷ جولای ۲۰۲۵ | مطالعه امکان‌سنجی مشترک</div>
+              </div>
+              <div class="metric-card-new">
+                <div class="metric-label-new">طول UAP</div>
+                <div class="metric-value-new">۶۸۱ کم (از افغانستان)</div>
+                <div class="metric-note-new">هزینه تخمینی $۴.۸–۷ میلیارد | هدف اولیه: ۲۰۲۷ (غیرواقع‌بینانه)</div>
+              </div>
+              <div class="metric-card-new">
+                <div class="metric-label-new">گوادر از طریق CPEC</div>
+                <div class="metric-value-new">جاده‌ای فعال</div>
+                <div class="metric-note-new">بزرگراه قراقرم (KKH) ۱۳۰۰ کم از کاشغر از طریق خنجراب در حال بهره‌برداری است | خط ریلی کاشغر-گوادر پیشنهاد شده اما ساخت آن آغاز نشده</div>
+              </div>
+              <div class="metric-card-new">
+                <div class="metric-label-new">ریسک مسیر افغانستان</div>
+                <div class="metric-value-new">بسیار بالا</div>
+                <div class="metric-note-new">بی‌ثباتی امنیتی | فقدان زیرساخت ریلی | نامعلوم بودن حاکمیت طالبان برای تعهدات بین‌المللی</div>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- شاخه ۳: ترانس‌خزری -->
+          <div style="border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <div style="font-weight:600;font-size:13px;margin-bottom:8px;">🌊 مسیر C — اروپا از طریق دریای خزر-آذربایجان-گرجستان (TITR)</div>
+            <div class="route-steps-new" style="flex-wrap:wrap;gap:4px;">
+              <span class="route-step-new rail-s">اندیجان</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">تاشکند</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new break-s">دریای خزر (کشتی)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">باکو (آذربایجان)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">تفلیس (گرجستان)</span>
+              <span class="route-arrow-new">←</span>
+              <span class="route-step-new rail-s">اروپا</span>
+            </div>
+            <div class="info-grid-new" style="margin-top:8px;">
+              <div class="metric-card-new">
+                <div class="metric-label-new">وضعیت TITR</div>
+                <div class="metric-value-new">عملیاتی و رو به رشد</div>
+                <div class="metric-note-new">پس از ۲۰۲۲ حجم بار به شکل قابل توجهی افزایش یافته | فعال‌ترین جایگزین مسیر روسیه</div>
+              </div>
+              <div class="metric-card-new">
+                <div class="metric-label-new">ارتباط با CKU</div>
+                <div class="metric-value-new">هم‌افزایی بالا</div>
+                <div class="metric-note-new">قرقیزستان (ژوئن ۲۰۲۶) با گرجستان توافق کرد بار CKU را از طریق TITR به اروپا هدایت کند</div>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- TAB: منابع -->
+        <div class="tab-content-new" id="c4-ref">
+          <div class="ref-box-new">
+            <p>• <a href="https://jamestown.org/china-kyrgyzstan-uzbekistan-railway-financing-loan-signed/" target="_blank">Jamestown Foundation — "CKU Railway Financing Loan Signed" (ژانویه ۲۰۲۶)</a></p>
+            <p>• <a href="https://timesca.com/china-kyrgyzstan-uzbekistan-railway-what-it-means-for-central-asia/" target="_blank">Times of Central Asia — "CKU Railway: What It Means for Central Asia" (مارس ۲۰۲۶)</a></p>
+            <p>• <a href="https://thediplomat.com/2026/03/the-politics-of-the-china-kyrgyzstan-uzbekistan-railway/" target="_blank">The Diplomat — "The Politics of the CKU Railway" (مارس ۲۰۲۶)</a></p>
+            <p>• <a href="https://www.newscentralasia.net/2025/12/23/china-kyrgyzstan-uzbekistan-cku-railway-a-strategic-connectivity-project/" target="_blank">News Central Asia — "CKU Railway: A Strategic Connectivity Project" (دسامبر ۲۰۲۵)</a></p>
+            <p>• <a href="https://caspianpolicy.org/research/middle-corridor/a-new-link-in-global-trade-the-china-kyrgyzstan-uzbekistan-railway-and-its-role-in-the-middle-corridor" target="_blank">Caspian Policy Center — "CKU and the Middle Corridor" (ژوئن ۲۰۲۵)</a></p>
+            <p>• <a href="https://www.eurasiareview.com/10092025-chinas-middle-corridors-and-east-west-connectivity-analysis/" target="_blank">Eurasia Review — "China's Middle Corridors and East-West Connectivity" (سپتامبر ۲۰۲۵)</a></p>
+            <p>• <a href="https://jamestown.org/uzbekistan-afghanistan-and-pakistan-expedite-work-on-joint-railway-project/" target="_blank">Jamestown — "UAP Railway: Uzbekistan-Afghanistan-Pakistan" (جولای ۲۰۲۵)</a></p>
+            <p>• <a href="https://indopacificinsights.substack.com/p/indo-pacific-5x5-june-12th-2026-issue" target="_blank">Indo-Pacific 5x5 — CKU & Kyrgyzstan-Georgia Transport Agenda (ژوئن ۲۰۲۶)</a></p>
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+ 
+    <!-- CORRIDOR 5: Maritime Silk Road -->
+    <div class="corridor-card-new" id="c5">
+      <div class="corridor-header-new" onclick="toggleCorridorNew('c5')">
+        <div class="risk-dot-new risk-med-new"></div>
+        <span class="transport-badge-new badge-sea-new">دریایی</span>
+        <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">راه ابریشم آبی <span style="font-size:11px;color:var(--text-muted);">(Maritime Silk Road)</span></h3></div>
+        <i class="chevron-new" id="c5-chev" aria-hidden="true">🔻</i>
+      </div>
+      <div class="corridor-body-new" id="c5-body">
+        <div class="tab-bar-new">
+          <div class="tab-new active" onclick="switchTabNew('c5','infra')">مسیر و زیرساخت</div>
+          <div class="tab-new" onclick="switchTabNew('c5','cost')">هزینه‌ها</div>
+          <div class="tab-new" onclick="switchTabNew('c5','risk')">ریسک</div>
+          <div class="tab-new" onclick="switchTabNew('c5','ref')">منابع</div>
+        </div>
+        <div class="tab-content-new active" id="c5-infra">
+          <div style="margin-bottom:8px;">
+            <strong style="font-size:12px;">مسیر Suez (استاندارد):</strong>
+            <div class="route-steps-new" style="margin-top:4px;">
+              <span class="route-step-new sea-s">بنادر چین</span><span class="route-arrow-new">←</span>
+              <span class="route-step-new sea-s">تنگه مالاکا</span><span class="route-arrow-new">←</span>
+              <span class="route-step-new sea-s">اقیانوس هند</span><span class="route-arrow-new">←</span>
+              <span class="route-step-new sea-s">دریای سرخ/کانال سوئز</span><span class="route-arrow-new">←</span>
+              <span class="route-step-new sea-s">مدیترانه به اروپا</span>
+            </div>
+          </div>
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">حجم ۲۰۲۴</div><div class="metric-value-new">۱۳.۵–۱۴ میلیون TEU</div><div class="metric-note-new">چین-اروپا; بزرگترین کریدور دنیا</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">زمان ترانزیت Suez</div><div class="metric-value-new">۲۸–۳۵ روز</div><div class="metric-note-new">در شرایط عادی</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">زمان ترانزیت Cape</div><div class="metric-value-new">۴۰–۵۰ روز</div><div class="metric-note-new">پس از تغییر مسیر حوثی (۱۰–۱۴ روز اضافه)</div></div>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c5-cost">
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">نرخ پایه Suez (عادی)</div><div class="metric-value-new">$۱,۵۰۰–۳,۰۰۰/FEU</div><div class="metric-note-new">شرایط عادی پیش از ۲۰۲۴</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">نرخ بحران ۲۰۲۴ (Cape)</div><div class="metric-value-new">$۵,۰۰۰–۷,۹۶۱/FEU</div><div class="metric-note-new">Drewry WCI اوج ۲۰۲۴</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">هزینه بیمه Cape</div><div class="metric-value-new">+۲–۵درصد</div><div class="metric-note-new">پریمیوم ریسک جنگی دریای سرخ</div></div>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c5-risk">
+          <div class="alert-warn-new alert-box-new">📢 از اواخر سال ۲۰۲۳، حملات حوثی باعث کاهش ۷۵درصد ترافیک دریایی از کانال سوئز شده است (بانک جهانی، پایان ۲۰۲۴). اکثریت کشتی‌های اصلی از دماغه امید نیک عبور می‌کنند. سطح ریسک متوسط رو به بالا است.</div>
+          <div class="tag-row-new">
+            <span class="tag-new danger">حملات حوثی دریای سرخ (۲۰۲۳–۲۰۲۶ ادامه‌دار)</span>
+            <span class="tag-new warn">نوسان شدید نرخ کرایه</span>
+            <span class="tag-new warn">کاهش ۷۵درصد ترافیک سوئز — افزایش ۷۰درصد ترافیک Cape</span>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c5-ref">
+          <div class="ref-box-new">
+            <p>• <a href="https://supplychaindigital.com/news/houthi-rebels-sink-cargo-ships-red-sea" target="_blank">Supply Chain Magazine — "What the Latest Houthi Red Sea Attacks Mean for Shipping" (۲۰۲۵)</a></p>
+            <p>• <a href="https://www.csis.org/analysis/global-economic-consequences-attacks-red-sea-shipping-lanes" target="_blank">CSIS — "Global Economic Consequences of Red Sea Attacks" (۲۰۲۴)</a></p>
+            <p>• Drewry World Container Composite Index — نرخ‌های کانتینر ۲۰۲۴</p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- CORRIDOR 6: INSTC -->
+    <div class="corridor-card-new" id="c6">
+      <div class="corridor-header-new" onclick="toggleCorridorNew('c6')">
+        <div class="risk-dot-new risk-med-new"></div>
+        <span class="transport-badge-new badge-multi-new">چندوجهی</span>
+        <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">کریدور شمال-جنوب <span style="font-size:11px;color:var(--text-muted);">(INSTC)</span></h3></div>
+        <i class="chevron-new" id="c6-chev" aria-hidden="true">🔻</i>
+      </div>
+      <div class="corridor-body-new" id="c6-body">
+        <div class="tab-bar-new">
+          <div class="tab-new active" onclick="switchTabNew('c6','infra')">زیرساخت</div>
+          <div class="tab-new" onclick="switchTabNew('c6','cost')">هزینه و زمان</div>
+          <div class="tab-new" onclick="switchTabNew('c6','risk')">ریسک</div>
+          <div class="tab-new" onclick="switchTabNew('c6','ref')">منابع</div>
+        </div>
+        <div class="tab-content-new active" id="c6-infra">
+          <div class="section-title-new">مسیر</div>
+          <div class="route-steps-new">
+            <span class="route-step-new rail-s">بمبئی (هند)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">دریای عرب / اقیانوس هند</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">بندر بندرعباس یا چابهار (ایران)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">شبکه ریلی ایران</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">دریای خزر (بندر انزلی/آستارا)</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">آستاراخان یا باکو</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">مسکو</span>
+            <span class="route-arrow-new">←</span>
+            <span class="route-step-new rail-s">St. Petersburg (روسیه)</span>
+          </div>
+          <div class="section-title-new">سه شاخه اصلی</div>
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">طول کل</div><div class="metric-value-new">۷,۲۰۰ کیلومتر</div><div class="metric-note-new">بمبئی تا St. Petersburg</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">حجم ۲۰۲۴</div><div class="metric-value-new">۲۶.۹ میلیون تن</div><div class="metric-note-new">رشد ۱۹درصد نسبت به ۲۰۲۳ | بیش از ۱۲.۹ میلیون تن از طریق ریل (RZD)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">اعضا</div><div class="metric-value-new">۱۳+ کشور</div><div class="metric-note-new">روسیه، ایران، هند + آذربایجان، قزاقستان، ارمنستان، بلاروس، تاجیکستان، قرقیزستان، عمان، ترکیه، بلغارستان، سوریه</div></div>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c6-cost">
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">هزینه تا St. Petersburg</div><div class="metric-value-new">$۲,۱۰۰–۲,۸۰۰</div><div class="metric-note-new">کانتینر ۲۰ft خشک</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">زمان ترانزیت (کامل)</div><div class="metric-value-new">۱۸–۳۰ روز</div><div class="metric-note-new">بمبئی تا St. Petersburg — بسته به شاخه (غربی سریع‌تر، شرقی کندتر)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">صرفه‌جویی نسبت به Suez</div><div class="metric-value-new">تقریبا  ۴۰درصد هزینه کمتر</div><div class="metric-note-new">سرعت دو برابر نسبت به Suez (مطالعه FFFAI هند)</div></div>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c6-risk">
+          <div class="alert-warn-new alert-box-new">💥 ریسک متوسط رو به بالا: تحریم‌های غرب علیه ایران محدودیت‌های جدی برای شرکت‌های غربی ایجاد می‌کند. خط ریلی رشت-آستارا (حلقه مفقوده غربی) هنوز تکمیل نشده.</div>
+          <div class="tag-row-new">
+            <span class="tag-new danger">تحریم‌های ایران (OFAC/EU)</span>
+            <span class="tag-new danger">ریسک نظام مالی و SWIFT</span>
+            <span class="tag-new warn">حلقه مفقوده: رشت-آستارا (تکمیل پیش‌بینی ۲۰۲۸)</span>
+            <span class="tag-new ok">هند: فعال و در حال توسعه</span>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c6-ref">
+          <div class="ref-box-new">
+            <p>• <a href="https://www.energyintel.com/0000019a-c479-d672-a9be-c77f8c740000" target="_blank">Energy Intelligence — "North–South Transport Corridor and Energy Exports" (نوامبر ۲۰۲۵)</a></p>
+            <p>• <a href="https://valdaiclub.com/a/highlights/eurasia-s-infrastructure-an-indian-perspective/" target="_blank">Valdai Club — "Eurasia's Infrastructure: An Indian Perspective" (۲۰۲۵)</a></p>
+            <p>• <a href="https://www.grc.net/single-commentary/302" target="_blank">GRC — "The International North-South Transport Corridor" (اوت ۲۰۲۵)</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- CORRIDOR 7: Polar Silk Road -->
+    <div class="corridor-card-new" id="c7">
+      <div class="corridor-header-new" onclick="toggleCorridorNew('c7')">
+        <div class="risk-dot-new risk-high-new"></div>
+        <span class="transport-badge-new badge-arctic-new">قطبی/جدید</span>
+        <div style="flex:1"><h3 style="font-size:14px;font-weight:500;">کریدور قطبی — NSR <span style="font-size:11px;color:var(--text-muted);">(Polar Silk Road / Northern Sea Route)</span></h3></div>
+        <i class="chevron-new" id="c7-chev" aria-hidden="true">🔻</i>
+      </div>
+      <div class="corridor-body-new" id="c7-body">
+        <div class="tab-bar-new">
+          <div class="tab-new active" onclick="switchTabNew('c7','infra')">مسیر و زیرساخت</div>
+          <div class="tab-new" onclick="switchTabNew('c7','cost')">هزینه‌ها</div>
+          <div class="tab-new" onclick="switchTabNew('c7','risk')">ریسک و محدودیت</div>
+          <div class="tab-new" onclick="switchTabNew('c7','ref')">منابع</div>
+        </div>
+        <div class="tab-content-new active" id="c7-infra">
+          <div class="route-steps-new">
+            <span class="route-step-new sea-s">بنادر چین</span><span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">تنگه برینگ</span><span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">NSR (ساحل شمالی روسیه)</span><span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">مورمانسک</span><span class="route-arrow-new">←</span>
+            <span class="route-step-new sea-s">اروپای شمالی</span>
+          </div>
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">صرفه‌جویی فاصله</div><div class="metric-value-new">تقریبا  ۷,۰۰۰ کیلومتر</div><div class="metric-note-new">کوتاه‌تر از مسیر Suez</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">زمان ترانزیت</div><div class="metric-value-new">۱۸–۲۰ روز</div><div class="metric-note-new">Istanbul Bridge: سپتامبر–اکتبر ۲۰۲۵ — Ningbo به Felixstowe در ۲۰ روز (برنامه ۱۸ روز)</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">پنجره فصل</div><div class="metric-value-new">جولای–نوامبر</div><div class="metric-note-new">برای کشتی‌های غیریخ‌شکن</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">کشتی‌های کانتینری ۲۰۲۵</div><div class="metric-value-new">۱۵ کشتی</div><div class="metric-note-new">تقریبا  ۴۰۰,۰۰۰ تن محموله کانتینری در کل فصل ۲۰۲۵ (Corporate Knights، آوریل ۲۰۲۶)</div></div>
+          </div>
+          <div class="alert-ok-new alert-box-new">📢 سپتامبر–اکتبر ۲۰۲۵: کشتی Istanbul Bridge (4,890 TEU) از Ningbo-Zhoushan (۲۲ سپتامبر) به Felixstowe (۱۳ اکتبر) از طریق NSR سفر کرد — اولین سرویس لاینر تجاری چین-اروپا از مسیر قطبی. در کل فصل ۲۰۲۵ تعداد ۱۵ کشتی کانتینری این مسیر را طی کردند.</div>
+        </div>
+        <div class="tab-content-new" id="c7-cost">
+          <div class="info-grid-new">
+            <div class="metric-card-new"><div class="metric-label-new">هزینه همراهی یخ‌شکن</div><div class="metric-value-new">$۵۰,۰۰۰–۲۰۰,۰۰۰/سفر</div><div class="metric-note-new">Rosatom — بسته به کلاس یخ</div></div>
+            <div class="metric-card-new"><div class="metric-label-new">پریمیوم بیمه قطبی</div><div class="metric-value-new">+۲–۵درصد Hull</div><div class="metric-note-new">ریسک برخورد با یخ</div></div>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c7-risk">
+          <div class="alert-danger-new alert-box-new">🔴 ریسک بسیار بالا برای شرکت‌های غربی: مسیر زیر کنترل کامل Rosatom روسیه؛ تحریم‌های غرب اعمال می‌شود.</div>
+          <div class="tag-row-new">
+            <span class="tag-new danger">کنترل روسی — تحریم‌های OFAC/EU</span>
+            <span class="tag-new danger">بزرگ‌ترین شرکت‌های کانتینری (MSC، Maersk): تعهد به عدم استفاده</span>
+            <span class="tag-new warn">محدودیت فصلی شدید</span>
+            <span class="tag-new warn">ریسک برخورد زیرساخت زیردریایی (سابقه: Newnew Polar Bear)</span>
+          </div>
+        </div>
+        <div class="tab-content-new" id="c7-ref">
+          <div class="ref-box-new">
+            <p>• <a href="https://www.inss.org.il/publication/northern-sea-route/" target="_blank">INSS — "The Istanbul Bridge's Important Journey: A New Chapter for the NSR" (ژانویه ۲۰۲۶)</a></p>
+            <p>• <a href="https://corporateknights.com/transportation/chinas-arctic-shipping-ambitions-are-enabling-a-dangerous-oil-corridor/" target="_blank">Corporate Knights — "China's Arctic Shipping Ambitions" (آوریل ۲۰۲۶)</a></p>
+            <p>• <a href="https://www.cnn.com/2025/10/03/climate/china-arctic-shipping-northern-sea-route" target="_blank">CNN — "This Sea Route Has Been Dismissed as Too Treacherous. China's Taking the Risk" (اکتبر ۲۰۲۵)</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div style="margin-top:1.5rem;padding:12px 0;border-top:0.5px solid var(--border);">
+      <p style="font-size:11px;color:var(--text-dim);">داده‌ها از منابع معتبر ۲۰۲۴–۲۰۲۶ جمع‌آوری و تصحیح شده‌اند. منابع اصلی: UTLC ERA، ERAI، Kazakhstan Ministry of Transport، Jamestown Foundation، Energy Intelligence، Valdai Club، CSIS، INSS، Corporate Knights، index1520، ADY (Azerbaijan Railways)، World Bank — <strong>ژوئن ۲۰۲۶</strong></p>
+    </div>
+  </div>
+  
+  <div id="corridors-tab-comparison" class="corridors-tab-pane">
+    <div class="wrap-new">
+      <div class="top-new">
+        <h1>جدول مقایسه جامع کریدورهای ابریشم</h1>
+        <span class="src-badge-new">داده‌های تأیید‌شده ۲۰۲۴–۲۰۲۶</span>
+      </div>
+      <div class="legend-new">
+        <div class="li-new"><div class="ld-new" style="background:#639922"></div>ریسک پایین</div>
+        <div class="li-new"><div class="ld-new" style="background:#EF9F27"></div>ریسک متوسط</div>
+        <div class="li-new"><div class="ld-new" style="background:#E24B4A"></div>ریسک بالا</div>
+      </div>
+
+      <div class="section-card-new">
+        <div class="sec-header-new">
+          <h2>۱ — زیرساخت، مسیر و زمان ترانزیت</h2>
+          <span class="ref-inline-new">منابع: EY Kazakhstan، ADY، SeaRates، WITA، TITR Assoc. 2024-2026</span>
+        </div>
+        <div class="tbl-wrap-new">
+          <table>
+            <thead>
+              <tr><th>ویژگی</th><th>ترانس‌سیبری<br><span style="font-weight:400;font-size:10px;">(Northern/TSR)</span></th><th>راه ابریشم آبی<br><span style="font-weight:400;font-size:10px;">(Maritime)</span></th><th>کریدور میانی<br><span style="font-weight:400;font-size:10px;">(TITR)</span></th><th>کریدور شمالی قطبی<br><span style="font-weight:400;font-size:10px;">(Polar/NSR)</span></th></tr>
+            </thead>
+            <tbody>
+              <tr><td>نوع</th><td><span class="badge-new b-rail-new">ریلی</span></th><td><span class="badge-new b-sea-new">دریایی</span></th><td><span class="badge-new b-multi-new">چندوجهی</span></th><td><span class="badge-new b-arc-new">دریایی قطبی</span></th></tr>
+              <tr><td>طول مسیر</th><td>تقریبا  ۹,۲۰۰ کیلومتر</th><td>تقریبا  ۲۱,۰۰۰ کیلومتر (Suez)<br>تقریبا  ۲۸,۰۰۰ کیلومتر (Cape)</th><td>تقریبا  ۸,۷۰۰ کیلومتر</th><td>تقریبا  ۱۴,۰۰۰ کیلومتر<br><span class="note-new">۷,۰۰۰km کوتاه‌تر از Suez</span></th></tr>
+              <tr><td>زمان ترانزیت ۲۰۲۵</th><td>۱۵–۲۲ روز<br><span class="note-new">کاهش سرعت به ۳۶-۴۰km/h</span></th><td>۲۸–۳۵ روز (Suez)<br>۴۰–۵۰ روز (Cape)</th><td>۱۸–۲۵ روز<br><span class="note-new">هدف: ۱۴–۱۸ روز</span></th><td>۱۸–۲۰ روز<br><span class="note-new">فقط فصل تابستان</span></th></tr>
+              <tr><td>ظرفیت واقعی ۲۰۲۴</th><td>تقریبا  ۵۰۰–۶۵۰ هزار TEU<br><span class="note-new">کاهش ۹.۸درصد نسبت به ۲۰۲۳</span></th><td>۱۳.۵–۱۴ میلیون TEU<br><span class="note-new">(China-Europe, 2024)</span></th><td>۴.۴۷ میلیون تن / ۵۵,۰۰۰ TEU<br><span class="note-new">رشد ۶۳درصد نسبت به ۲۰۲۳</span></th><td><span class="badge-new b-na-new">تجاری اولیه</span><br><span class="note-new">آغاز تجاری: اکتبر ۲۰۲۵</span></th></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-card-new">
+        <div class="sec-header-new">
+          <h2>۲ — هزینه‌ها: حمل، گمرک، تأخیر و اداری</h2>
+          <span class="ref-inline-new">منابع: ERA Index، SeaRates، Arta Rail، Valdai Club 2024-2025</span>
+        </div>
+        <div class="tbl-wrap-new">
+          <table>
+            <thead><tr><th>نوع هزینه</th><th>ترانس‌سیبری</th><th>راه ابریشم آبی</th><th>کریدور میانی (TITR)</th><th>کریدور قطبی</th></tr></thead>
+            <tbody>
+              <tr><td>هزینه حمل (FEU)</td><td>تقریبا  $۳,۲۴۰<br><span class="note-new">ERA Index میانگین ۲۰۲۴</span></td><td>$۱,۵۰۰–۷,۹۶۱<br><span class="note-new">Drewry WCI; بحران Suez ۲۰۲۴</span></td><td>$۵,۰۰۰–۷,۰۰۰ (چین→ترکیه)<br><span class="note-new">+$۱,۰۰۰–۲,۰۰۰ تا اروپا</span></td><td>بالا — در حال تعریف<br><span class="note-new">+هزینه یخ‌شکن $۵۰K–۲۰۰K/سفر</span></td></tr>
+              <tr><td>هزینه تغییر گیج</td><td>$۸۰–۲۰۰/TEU (هر نقطه)</td><td>ندارد</td><td>$۸۰–۲۰۰/TEU (هر نقطه)</td><td>ندارد</td></tr>
+              <tr><td>هزینه بیمه اضافی</td><td>نیم تا دو درصد اضافه بر اساس ارزش بار<br><span class="note-new">ریسک تحریم + مصادره</span></td><td>به اضافه ۲ تا ۵ درصد برای بدنه کشتی (Hull)<br><span class="note-new">پریمیوم جنگی دریای سرخ</span></td><td>به اضافه ۰.۲ تا ۰.۵ درصد<br><span class="note-new">پایین‌ترین پریمیوم بین ریلی</span></td><td>+۲–۵درصد Hull<br><span class="note-new">ریسک یخ + قطبی</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-card-new">
+        <div class="sec-header-new">
+          <h2>۳ — ریسک‌ها: امنیتی، ژئوپلیتیک، بیمه و مسیرهای پشتیبان</h2>
+          <span class="ref-inline-new">منابع: Jamestown، Defense.info، Tradlinx، GEODIS 2024-2026</span>
+        </div>
+        <div class="tbl-wrap-new">
+          <table>
+            <thead><tr><th>ویژگی ریسک</th><th>ترانس‌سیبری</th><th>راه ابریشم آبی</th><th>کریدور میانی (TITR)</th><th>کریدور قطبی</th></tr></thead>
+            <tbody>
+              <tr><td>سطح ریسک کلی</td><td><div class="risk-row-new"><div class="rdot-new r-hi-new"></div>بسیار بالا</div></td><td><div class="risk-row-new"><div class="rdot-new r-me-new"></div>متوسط</div></td><td><div class="risk-row-new"><div class="rdot-new r-me-new"></div>متوسط-پایین</div></td><td><div class="risk-row-new"><div class="rdot-new r-hi-new"></div>بسیار بالا</div></td></tr>
+              <tr><td>ریسک تحریم</td><td><span class="badge-new b-danger-new">بسیار بالا</span><br><span class="note-new">EU/US/UK تحریم کامل</span></td><td><span class="badge-new b-ok-new">پایین (Suez)</span><br><span class="badge-new b-warn-new">متوسط (Cape)</span></td><td><span class="badge-new b-ok-new">نزدیک به صفر</span><br><span class="note-new">روسیه و بلاروس را دور می‌زند</span></td><td><span class="badge-new b-danger-new">بالا</span><br><span class="note-new">کنترل روسی (Rosatom)</span></td></tr>
+              <tr><td>سطح بیمه‌پذیری</td><td><span class="badge-new b-danger-new">Lloyd's خارج شده</span><br><span class="note-new">فقط بیمه چینی/روسی</span></td><td><span class="badge-new b-ok-new">کامل</span><br><span class="note-new">+پریمیوم جنگی Suez</span></td><td><span class="badge-new b-ok-new">در دسترس</span><br><span class="note-new">پیچیده‌تر برای بخش خزر</span></td><td><span class="badge-new b-danger-new">محدود</span><br><span class="note-new">MSC، Maersk خودداری کرده‌اند</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-card-new">
+        <div class="sec-header-new">
+          <h2>۴ — بار، داکیومنت‌ها، انطباق گمرکی و مجوزها</h2>
+          <span class="ref-inline-new">منابع: INSTC.org، ADY، WCO، IMO، WTO 2024-2025</span>
+        </div>
+        <div class="tbl-wrap-new">
+          <table>
+            <thead><tr><th>ویژگی</th><th>ترانس‌سیبری</th><th>راه ابریشم آبی</th><th>کریدور میانی (TITR)</th><th>کریدور قطبی</th></tr></thead>
+            <tbody>
+              <tr><td>توان بار حجیم (OOG)</td><td><span class="badge-new b-warn-new">محدود</span><br><span class="note-new">نیاز به مجوز ویژه RZD</span></td><td><span class="badge-new b-ok-new">کامل</span><br><span class="note-new">Flat Rack، Open Top، Platform</span></td><td><span class="badge-new b-warn-new">پیچیده در بخش خزر</span><br><span class="note-new">ریل: ممکن</span></td><td><span class="badge-new b-ok-new">مناسب</span><br><span class="note-new">بار سنگین: روی عرشه</span></td></tr>
+              <tr><td>ریسک انطباق تحریم</td><td><span class="badge-new b-danger-new">بسیار بالا</span><br><span class="note-new">OFAC/EU Secondary Sanctions</span></td><td><span class="badge-new b-ok-new">پایین (مسیرهای عادی)</span></td><td><span class="badge-new b-ok-new">پایین</span><br><span class="note-new">بدون تحریم فعلی</span></td><td><span class="badge-new b-danger-new">بالا</span><br><span class="note-new">تحریم‌های روسیه</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-card-new">
+        <div class="sec-header-new">
+          <h2>۵ — استراتژی BRI تا ۲۰۳۰ و سرمایه‌گذاری‌های کلیدی</h2>
+          <span class="ref-inline-new">منابع: Griffith/GFDC BRI Report 2025، World Bank، EBRD</span>
+        </div>
+        <div class="bri-grid-new">
+          <div class="bri-card-new"><div class="bri-label-new">تعامل کل BRI در ۲۰۲۵</div><div class="bri-val-new">$۲۱۳.۵ میلیارد</div><div class="bri-sub-new">رشد ۱۹درصد نسبت به ۲۰۲۴ (۳۵۰ قرارداد)</div></div>
+          <div class="bri-card-new"><div class="bri-label-new">قراردادهای ساخت ۲۰۲۵</div><div class="bri-val-new">$۱۲۸.۴ میلیارد</div><div class="bri-sub-new">رشد ۸۱درصد نسبت به ۲۰۲۴</div></div>
+          <div class="bri-card-new"><div class="bri-label-new">سرمایه‌گذاری مستقیم ۲۰۲۵</div><div class="bri-val-new">$۸۵.۲ میلیارد</div><div class="bri-sub-new">رشد ۶۲درصد نسبت به ۲۰۲۴</div></div>
+          <div class="bri-card-new"><div class="bri-label-new">هدف TITR تا ۲۰۲۹</div><div class="bri-val-new">۳۰۰,۰۰۰ TEU</div><div class="bri-sub-new">از ۷۷,۰۰۰ TEU در ۲۰۲۵</div></div>
+        </div>
+        <div class="tbl-wrap-new">
+          <table>
+            <thead><tr><th>پروژه / ابتکار</th><th>وضعیت ۲۰۲۵</th><th>سرمایه‌گذاری</th><th>اثر بر کریدور</th></tr></thead>
+            <tbody>
+              <tr><td>CKU (چین-قرقیزستان-ازبکستان)</td><td><span class="badge-new b-warn-new">در حال ساخت</span><br><span class="note-new">تونل‌ها از آوریل ۲۰۲۵</span></td><td>$۴.۷ میلیارد</td><td>TITR: کوتاه‌کردن ۷ روز</td></tr>
+              <tr><td>ارتقاء BTK گرجستان</td><td><span class="badge-new b-ok-new">تکمیل شده (مه ۲۰۲۴)</span></td><td>$۲۵۰ میلیون (آذربایجان)</td><td>ظرفیت از یک میلیون تن به پنج میلیون تن افزایش یافته است</td></tr>
+              <tr><td>رشت–آستارا ریل (ایران، INSTC)</td><td><span class="badge-new b-warn-new">در مرحله قرارداد ۲۰۲۵</span></td><td>روسیه: تأمین مالی متعهد</td><td>تکمیل شکاف غربی INSTC</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-card-new">
+        <div class="sec-header-new">
+          <h2>۶ — خلاصه مقایسه‌ای تمام کریدورها</h2>
+          <span class="ref-inline-new">داده‌های ۲۰۲۴–۲۰۲۶</span>
+        </div>
+        <div class="tbl-wrap-new">
+          <table>
+            <thead><tr><th>کریدور</th><th>نوع</th><th>TEU / حجم ۲۰۲۴</th><th>زمان ترانزیت</th><th>ریسک</th><th>وضعیت</th></tr></thead>
+            <tbody>
+              <tr><td>Trans-Siberian</td><td><span class="badge-new b-rail-new">ریلی</span></td><td>تقریبا  ۵۰۰–۶۵۰ هزار TEU</td><td>۱۵–۲۲ روز</td><td><div class="risk-row-new"><div class="rdot-new r-hi-new"></div>بسیار بالا</div></td><td><span class="badge-new b-danger-new">تحت تحریم</span></td></tr>
+              <tr><td>Maritime Silk Road</td><td><span class="badge-new b-sea-new">دریایی</span></td><td>۱۳.۵–۱۴ میلیون TEU</td><td>۲۸–۵۰ روز</td><td><div class="risk-row-new"><div class="rdot-new r-me-new"></div>متوسط</div></td><td><span class="badge-new b-ok-new">عملیاتی</span></td></tr>
+              <tr><td>TITR</td><td><span class="badge-new b-multi-new">چندوجهی</span></td><td>۵۵,۰۰۰ TEU / ۴.۴۷M تن</td><td>۱۸–۲۵ روز</td><td><div class="risk-row-new"><div class="rdot-new r-me-new"></div>متوسط-پایین</div></td><td><span class="badge-new b-ok-new">در حال رشد</span></td></tr>
+              <tr><td>BTK</td><td><span class="badge-new b-rail-new">ریلی</span></td><td>تقریبا  ۶–۸ میلیون تن</td><td>جزء TITR (تقریبا  ۱۵ روز)</td><td><div class="risk-row-new"><div class="rdot-new r-lo-new"></div>پایین</div></td><td><span class="badge-new b-ok-new">ارتقاء ۲۰۲۴</span></td></tr>
+              <tr><td>INSTC</td><td><span class="badge-new b-multi-new">چندوجهی</span></td><td>۲۶.۹ میلیون تن</td><td>۱۹–۳۰ روز</td><td><div class="risk-row-new"><div class="rdot-new r-me-new"></div>متوسط-بالا</div></td><td><span class="badge-new b-warn-new">در حال توسعه</span></td></tr>
+              <tr><td>Polar Silk Road</td><td><span class="badge-new b-arc-new">قطبی</span></td><td><span class="badge-new b-na-new">آزمایشی/اولیه</span></td><td>۱۸–۲۰ روز (تابستان)</td><td><div class="risk-row-new"><div class="rdot-new r-hi-new"></div>بسیار بالا</div></td><td><span class="badge-new b-warn-new">محدود به فصل</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:12px 0;border-top:0.5px solid var(--border);">
+        <p style="font-size:11px;color:var(--text-dim);">📢 این داشبورد برای اهداف تحقیقاتی است. داده‌های عملیاتی، تعرفه‌های دقیق و شرایط گمرکی باید از اپراتورهای لجستیکی معتبر دریافت شوند. آخرین به‌روزرسانی: ژوئن ۲۰۲۶</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== صفحه سوم: بنادر و مرزهای ایران ========== -->
+<div id="dash-borders" class="dash-section">
+  <style>
+      *{box-sizing:border-box;margin:0;padding:0;}
+      :root{
+        --bg0:#f4f6f9;--bg1:#ffffff;--bg2:#ffffff;--bg3:#fafbfc;
+        --line:#e8a05a;          /* orange border */
+        --line-soft:#f3c896;
+        --acc:#d35400;           /* deep orange accent */
+        --acc-soft:#fff3e6;
+        --txt:#1f2937;--muted:#6b7280;--dim:#9ca3af;
+        --grn:#16a34a;--amb:#d97706;--red:#dc2626;--blue:#2563eb;--pur:#7c3aed;--teal:#0d9488;
+      }
+      #dash-borders .wrap{background:var(--bg0);color:var(--txt);padding:18px;min-height:10vh;font-family:'Vazirmatn','Tahoma','Segoe UI',sans-serif;font-size:13px;border-radius:14px;}
+      #dash-borders .border-meta{display:flex;gap:16px;font-size:11px;color:var(--muted);flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+      #dash-borders .pulse{width:7px;height:7px;border-radius:50%;display:inline-block;margin-left:5px;animation:db-blink 1.6s infinite;}
+      @keyframes db-blink{0%,100%{opacity:1}50%{opacity:.25}}
+      #dash-borders .p-grn{background:var(--grn);}
+      #dash-borders .p-red{background:var(--red);}
+      #dash-borders .p-amb{background:var(--amb);}
+
+      #dash-borders .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+      #dash-borders .mb{margin-bottom:12px;}
+      @media (max-width:900px){ #dash-borders .g2{grid-template-columns:1fr;} }
+
+      #dash-borders .p{background:var(--bg1);border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;}
+      #dash-borders .p-title{font-size:12px;font-weight:800;color:var(--acc);letter-spacing:.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid var(--line-soft);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+      #dash-borders .p-src{font-size:9.5px;color:var(--dim);font-weight:500;text-align:left;}
+
+      #dash-borders .tbl-wrap{overflow-x:auto;}
+      #dash-borders .tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+      #dash-borders .tbl th{font-size:10px;color:var(--acc);font-weight:800;padding:7px 8px;border-bottom:2px solid var(--line);text-align:right;letter-spacing:.3px;background:var(--acc-soft);white-space:nowrap;}
+      #dash-borders .tbl th:first-child{border-radius:6px 0 0 0;}
+      #dash-borders .tbl th:last-child{border-radius:0 6px 0 0;}
+      #dash-borders .tbl td{padding:7px 8px;border-bottom:1px solid #f1e3d0;vertical-align:top;line-height:1.6;}
+      #dash-borders .tbl tr:last-child td{border-bottom:none;}
+      #dash-borders .tbl tr:hover td{background:#fff8f0;}
+
+      #dash-borders .bd{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:800;letter-spacing:.3px;white-space:nowrap;}
+      #dash-borders .bd-r{background:#fde8e8;color:var(--red);}
+      #dash-borders .bd-a{background:#fef3e2;color:var(--amb);}
+      #dash-borders .bd-g{background:#e6f6ec;color:var(--grn);}
+      #dash-borders .bd-b{background:#e8f0fe;color:var(--blue);}
+      #dash-borders .bd-p{background:#f3ebfe;color:var(--pur);}
+      #dash-borders .bd-t{background:#e3f7f5;color:var(--teal);}
+      #dash-borders .bd-o{background:var(--acc-soft);color:var(--acc);}
+
+      #dash-borders .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+      #dash-borders .kpi{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;}
+      #dash-borders .kpi-v{font-size:21px;font-weight:800;line-height:1.15;color:var(--txt);}
+      #dash-borders .kpi-l{font-size:10.5px;color:var(--muted);margin-top:4px;letter-spacing:.3px;font-weight:700;}
+      @media (max-width:900px){#dash-borders .kpi-grid{grid-template-columns:1fr 1fr;}}
+
+      #dash-borders .alert{background:#fff7ed;border:1.5px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#92400e;line-height:1.7;}
+      #dash-borders .alert-red{background:#fef2f2;border-color:#fca5a5;color:#b91c1c;}
+      #dash-borders .alert-blue{background:#eff6ff;border-color:#93c5fd;color:#1e40af;}
+
+      #dash-borders .col-hi-new{background:#fffaf3;}
+
+      #dash-borders .sig{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f1e3d0;}
+      #dash-borders .sig:last-child{border-bottom:none;}
+      #dash-borders .sig-lvl{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:800;flex-shrink:0;margin-top:1px;white-space:nowrap;}
+      #dash-borders .sig-name{font-size:12px;flex:1;line-height:1.6;}
+      #dash-borders .sig-val{font-size:11px;color:var(--muted);text-align:left;font-weight:700;}
+  </style>
+
+  <div class="wrap">
+
+    <div class="border-meta">
+      <span><span class="pulse p-red"></span>هرمز: بحران فعال</span>
+      <span><span class="pulse p-grn"></span>چابهار: فعال</span>
+      <span style="color:var(--dim);">به‌روزرسانی: ۱۴ ژوئن ۲۰۲۶</span>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-v" style="color:var(--acc);">۲۲</div><div class="kpi-l">گذرگاه مرزی فعال</div></div>
+      <div class="kpi"><div class="kpi-v" style="color:var(--grn);">6.65M</div><div class="kpi-l">ظرفیت TEU بندر رجایی</div></div>
+      <div class="kpi"><div class="kpi-v" style="color:var(--amb);">100K → 500K</div><div class="kpi-l">ظرفیت TEU چابهار ۲۰۲۶</div></div>
+      <div class="kpi"><div class="kpi-v" style="color:var(--red);">۵۷</div><div class="kpi-l">کشته در انفجار بندر رجایی</div></div>
+    </div>
+
+    <div class="alert">⚠ انفجار ۲۶ آوریل ۲۰۲۵ در بندر رجایی: ۵۷ کشته و بیش از ۱۰۰۰ مجروح — عملیات بندر ظرف چند روز از سر گرفته شد. ظرفیت ۱۰۰ میلیون تن در سال و 6.65M TEU توسط Iran International و The National تأیید شده است.</div>
+
+    <div class="alert-red alert">⚠ بحران هرمز ۲۰۲۶: از ۲۸ فوریه ۲۰۲۶ تنگه هرمز عملاً بسته شده است. میانگین ترانزیت روزانه از ۱۲۹ کشتی به ۶ کشتی رسیده (UNCTAD، ۱ آوریل ۲۰۲۶). بیش از ۱۵۰ کشتی غیرتحریمی، از جمله ۶۲ نفتکش VLCC، در خلیج فارس گیر کرده‌اند (Lloyd's List). بیش از ۱۶۲ میلیون بشکه نفت دیگر در معرض خطر است (IEA).</div>
+
+    <!-- SOUTHERN PORTS -->
+    <div class="p mb">
+      <div class="p-title">بنادر جنوبی — خلیج فارس و دریای عمان <span class="p-src">منبع: PMO Iran · UNESCAP · Iran Int'l · The National · India Shipping News · EIA</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead>
+            <tr><th>بندر</th><th>ظرفیت سالانه</th><th>زیرساخت و توسعه</th><th>وضعیت / آسیب</th><th>عمق آب</th><th>محدودیت‌ها</th><th>مزیت رقابتی</th><th>کالاهای اصلی</th><th>راه‌آهن</th><th>فاصله تا تهران/اهواز</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--acc);">🏗 رجایی (بندرعباس)</strong><br><span style="font-size:10px;color:var(--muted);">IRSRP | ۳۲°۲۰N</span></td>
+              <td style="color:var(--grn);font-weight:800;">100M ton/yr<br>6.65M TEU<br>۴۰+ اسکله</td><td>۴۸۰۰ هکتار، ۱۰ اسکله کانتینری با عمق ۱۳–۱۷ متر، ۲۳.۵ کیلومتر ریل داخلی، ترمینال جدید $430M، پذیرش کشتی‌های Panamax تا 18,400 TEU؛ عمق ۱۷ متر در حال ساخت</td><td><span class="bd bd-r">انفجار آوریل ۲۰۲۵</span><br><span style="font-size:10px;">عملیات ظرف ۷۲ ساعت بازگشت</span></td><td>13–16m</td><td>هرمز بسته — عملاً قطع ارتباط؛ بدون SWIFT؛ بدون بیمه‌گران غربی؛ فاصله ریل تا اسکله حدود ۱.۵ کیلومتر</td><td style="color:var(--grn);">۸۵درصد ترافیک کانتینری ایران؛ هاب اصلی INSTC؛ بزرگ‌ترین بندر کانتینری آسیا–خاورمیانه</td><td>کانتینر، نفت، سنگ‌آهن، مواد شیمیایی، خودرو، غلات</td><td><span class="bd bd-g">✓ بله</span><br><span style="font-size:10px;">تهران–بندرعباس</span></td><td>1,381 km<br><span style="font-size:10px;">جاده: تقریبا  ۱۲ ساعت / قطار: تقریبا  ۱۸ ساعت</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--acc);">⚓ باهنر (بندرعباس)</strong><br><span style="font-size:10px;color:var(--muted);">IRBND</span></td>
+              <td>37M ton/yr<br>1M TEU</td><td>بندر قدیمی‌تر بندرعباس؛ ترمینال عمومی، RoRo، خودروبر</td><td><span class="bd bd-a">آسیب غیرمستقیم</span></td><td>—</td><td>هرمز بسته؛ زیرساخت قدیمی‌تر</td><td>صادرات سنتی: فرش، زعفران، پسته؛ واردات: چای، قند</td><td>فرش، پسته، خودرو، فرآورده نفتی</td><td><span class="bd bd-g">✓ بله</span></td><td>1,050 km</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--teal);">🌊 چابهار (شهید بهشتی)</strong><br><span style="font-size:10px;color:var(--muted);">بیرون از هرمز | ۲۵°۲۰N</span></td>
+              <td style="color:var(--grn);font-weight:800;">100K TEU فعلی<br>8.5M ton (فاز ۱)</td><td>۲ اسکله کانتینری ۳۶۰ متری، عمق ۱۶ متر برای کشتی‌های Post-Panamax، ۶ جرثقیل موبایل هندی، اپراتور IPGL، توسعه به ۵۰۰K TEU در فاز ۲، سرمایه‌گذاری هند $370M، ریل ۶۲۸ کیلومتری تا زاهدان در حال ساخت</td><td><span class="bd bd-g">فعال — بدون آسیب</span><br><span style="font-size:10px;">بیرون از تنگه هرمز</span></td><td>16m</td><td>تحریم OFAC با waiver تا آوریل ۲۰۲۶؛ راه‌آهن هنوز ناقص؛ ظرفیت فعلی محدود به ۱۰۰K TEU</td><td style="color:var(--grn);">تنها بندر اقیانوسی ایران؛ ۷۰۰ مایل از هند؛ هاب INSTC؛ دسترسی به افغانستان و آسیای مرکزی</td><td>کانتینر، فله خشک، ماشین‌آلات، کالای افغانستان و آسیای مرکزی</td><td><span class="bd bd-r">× در دست ساخت</span><br><span style="font-size:10px;">۶۲۸ کیلومتر تا زاهدان</span></td><td>1,850 km<br><span style="font-size:10px;">جاده: تقریبا  ۲۰ ساعت</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--acc);">🛢 بوشهر</strong></td>
+              <td>550K TEU<br>15M ton/yr</td><td>بندر تجاری، پشتیبانی نفتی، ترمینال نفت خام؛ ترمینال جدید پارس جنوبی در دست احداث</td><td><span class="bd bd-r">هرمز بسته</span></td><td>10m</td><td>هرمز بسته؛ ظرفیت محدود؛ ریل محدود</td><td>نزدیک به میادین گاز پارس جنوبی</td><td>نفت، گاز LNG، پتروشیمی، مواد عمومی</td><td><span class="bd bd-a">محدود</span></td><td>1,100 km<br><span style="font-size:10px;">جاده: تقریبا  ۶ ساعت</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--acc);">⚓ ماهشهر</strong></td>
+              <td>25M ton/yr<br>هاب پتروشیمی اصلی</td><td>ترمینال پتروشیمی، اسکله‌های تخصصی شیمیایی؛ اسکله LPG جدید در دست احداث</td><td><span class="bd bd-r">هرمز بسته</span></td><td>14m</td><td>هرمز بسته؛ کاملاً تخصصی پتروشیمی</td><td>نزدیک‌ترین بندر صادراتی پتروشیمی به اروپا (از طریق سوئز)</td><td>پتروشیمی، متانول، اوره، گوگرد، LPG</td><td><span class="bd bd-g">✓ بله</span></td><td>190 km<br><span style="font-size:10px;">جاده: تقریبا  ۲ ساعت تا اهواز / 1,150km تا تهران</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--grn);">🛳 بندر امام خمینی</strong><br><span style="font-size:10px;color:var(--muted);">IRIMK | شمال خلیج فارس</span></td>
+              <td>40M ton/yr</td><td>۱۸ اسکله، ترمینال کانتینری، سیلوی غلات؛ توسعه سیلوی غلات تا ظرفیت ۱M ton</td><td><span class="bd bd-r">هرمز بسته</span></td><td>10–12m</td><td>هرمز بسته؛ مشکل گِل و رسوب‌گذاری</td><td>نزدیک‌ترین بندر به اهواز؛ تامین غلات برای خوزستان</td><td>غلات، فولاد، ماشین‌آلات، کالای عمومی</td><td><span class="bd bd-g">✓ بله</span></td><td>1,100 km<br><span style="font-size:10px;">جاده: تقریبا  ۱.۵ ساعت تا اهواز</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NORTHERN PORTS -->
+    <div class="p mb">
+      <div class="p-title">بنادر شمالی — دریای خزر <span class="p-src">منبع: INSTC Reports · Tarangya · PMO Iran</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>بندر</th><th>ظرفیت</th><th>زیرساخت</th><th>مزیت رقابتی</th><th>کالاهای اصلی</th><th>راه‌آهن</th><th>فاصله تا اهواز</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--grn);">🚢 انزلی</strong></td>
+              <td>15M ton/yr</td><td>قدیمی‌ترین بندر شمال، بندر تجاری روسیه</td><td style="color:var(--grn);">دروازه اصلی ورود چوب، کاغذ و فولاد روسیه به ایران</td><td>چوب، فولاد، غلات، کانتینر INSTC</td><td><span class="bd bd-a">نزدیک (رشت)</span></td><td>1,200 km / تقریبا  ۱۴ ساعت</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--grn);">🚢 امیرآباد</strong></td>
+              <td>10M ton/yr</td><td>تنها بندر با RoRo ریلی — قطار مستقیماً روی کشتی بارگذاری می‌شود</td><td style="color:var(--grn);">کنسرسیوم روسیه–ایران–هند ۲۰۲۶؛ RoRo ریلی منحصربه‌فرد در منطقه</td><td>خودرو، ماشین‌آلات، کانتینر، فله خشک</td><td><span class="bd bd-g">✓ RoRo ریلی</span></td><td>1,300 km / تقریبا  ۱۵ ساعت</td>
+            </tr>
+            <tr>
+              <td><strong>🚢 نوشهر</strong></td>
+              <td>5M ton/yr</td><td>بندر کوچک تجاری و گردشگری</td><td>محدود</td><td>کالای عمومی، مسافر</td><td><span class="bd bd-a">محدود</span></td><td>1,300 km</td>
+            </tr>
+            <tr>
+              <td><strong>🚢 ترکمن</strong></td>
+              <td>3M ton/yr</td><td>بندر کوچک با دسترسی به ترکمنستان</td><td>ترانزیت آسیای مرکزی</td><td>فله خشک، غلات، کانتینر کوچک</td><td><span class="bd bd-a">محدود</span></td><td>1,400 km</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAND BORDERS -->
+    <div class="p mb">
+      <div class="p-title">گذرگاه‌های مرزی — ظرفیت، کالا، هزینه، معطلی <span class="p-src">منبع: IRICA · PMO · COMCEC · گمرک ایران</span></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>گذرگاه</th><th>کشور مقابل</th><th>ظرفیت روزانه</th><th>کالاهای اصلی</th><th>مزیت</th><th>محدودیت</th><th>فاصله تا اهواز</th><th>جاده/ریل</th><th>هزینه ترانزیت</th><th>زمان معطلی</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--acc);">بازرگان</strong></td>
+              <td>🇹🇷 ترکیه</td><td>2,000 کامیون/روز</td><td>ماشین‌آلات، الکترونیک، نساجی، مواد غذایی</td><td style="color:var(--grn);">پرترافیک‌ترین مرز ایران-ترکیه؛ دسترسی به اروپا</td><td>ترافیک سنگین؛ بدون ریل مستقیم</td><td>1,600 km / تقریبا  ۱۸ ساعت</td><td><span class="bd bd-g">جاده ✓</span> <span class="bd bd-r">ریل ×</span></td><td>$300–500/ton</td><td>۱–۴ روز</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--acc);">رازی</strong></td>
+              <td>🇹🇷 ترکیه</td><td>ریلی + جاده‌ای</td><td>فله خشک، کانتینر ریلی</td><td style="color:var(--grn);">تنها گذرگاه ریلی ایران–ترکیه</td><td>ظرفیت ریل محدود؛ اختلاف عرض خط</td><td>1,650 km / تقریبا  ۱۹ ساعت</td><td><span class="bd bd-g">جاده ✓</span> <span class="bd bd-g">ریل ✓</span></td><td>$250–400/ton</td><td>۲–۵ روز</td>
+            </tr>
+            <tr>
+              <td><strong>پل‌دشت / سرو</strong></td>
+              <td>🇹🇷 ترکیه</td><td>200 کامیون/روز</td><td>میوه، سبزیجات، کالای کشاورزی</td><td>مسیر کوتاه‌تر آذربایجان غربی به ترکیه</td><td>ظرفیت کم؛ جاده کوهستانی</td><td>1,700 km</td><td><span class="bd bd-g">جاده ✓</span></td><td>$280–420/ton</td><td>۱–۳ روز</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--acc);">خسروی</strong></td>
+              <td>🇮🇶 عراق</td><td>800 کامیون/روز</td><td>مواد غذایی، مصالح ساختمانی، پوشاک</td><td style="color:var(--grn);">اصلی‌ترین مرز تجاری ایران–عراق (کرمانشاه)</td><td>ریسک امنیتی؛ معطلی گمرکی بالا</td><td>450 km / تقریبا  ۵ ساعت</td><td><span class="bd bd-g">جاده ✓</span></td><td>$150–250/ton</td><td>۲–۷ روز</td>
+            </tr>
+            <tr>
+              <td><strong>پرویزخان</strong></td>
+              <td>🇮🇶 عراق</td><td class="col-hi-new">500 کامیون/روز</td><td class="col-hi-new">کالای تجاری، اقلیم کردستان</td><td class="col-hi-new">دسترسی به اقلیم کردستان عراق</td><td class="col-hi-new">ریسک منطقه‌ای؛ دوگانگی کردستان–بغداد</td><td class="col-hi-new">440 km / تقریبا  ۵ ساعت</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span></td><td class="col-hi-new">$130–220/ton</td><td class="col-hi-new">۲–۵ روز</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--amb);">شلمچه</strong></td>
+              <td>🇮🇶 عراق</td><td class="col-hi-new">1,200 کامیون/روز</td><td class="col-hi-new">پتروشیمی، مصالح ساختمانی، مواد غذایی</td><td style="color:var(--grn);">نزدیک‌ترین مرز به بصره؛ پروژه ریل شلمچه–بصره</td><td class="col-hi-new">پروژه ریل در مرحله مذاکره؛ ترافیک سنگین زائرین</td><td class="col-hi-new">100 km / تقریبا  ۱.۵ ساعت</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span> <span class="bd bd-a">ریل در دست احداث</span></td><td class="col-hi-new">$80–150/ton</td><td class="col-hi-new">۱–۴ روز</td>
+            </tr>
+            <tr>
+              <td><strong>مهران (سردار سلیمانی)</strong></td>
+              <td>🇮🇶 عراق</td><td class="col-hi-new">400 کامیون/روز</td><td class="col-hi-new">کالای زائرین، کالای تجاری</td><td class="col-hi-new">دسترسی به کربلا و نجف</td><td class="col-hi-new">ظرفیت کم؛ اشباع در ایام اربعین</td><td class="col-hi-new">350 km / تقریبا  ۴ ساعت</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span></td><td class="col-hi-new">$120–200/ton</td><td class="col-hi-new">۳–۱۴ روز (اربعین)</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--teal);">سرخس</strong></td>
+              <td>🇹🇲 ترکمنستان</td><td class="col-hi-new">ریلی اصلی</td><td class="col-hi-new">گاز، نفت، فله خشک، کانتینر</td><td style="color:var(--grn);">ریل مستقیم به آسیای مرکزی، چین و روسیه</td><td class="col-hi-new">کنترل ترکمنستان؛ معطلی گمرکی</td><td class="col-hi-new">1,800 km / تقریبا  ۲۰ ساعت</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span> <span class="bd bd-g">ریل ✓</span></td><td class="col-hi-new">$200–350/ton</td><td class="col-hi-new">۳–۸ روز</td>
+            </tr>
+            <tr>
+              <td><strong>دوغارون</strong></td>
+              <td>🇦🇫 افغانستان</td><td class="col-hi-new">600 کامیون/روز</td><td class="col-hi-new">مواد غذایی، سوخت، ماشین‌آلات</td><td class="col-hi-new">مسیر اصلی واردات افغانستان</td><td class="col-hi-new">ریسک طالبان؛ بدون ریل</td><td class="col-hi-new">1,900 km</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span></td><td class="col-hi-new">$180–300/ton</td><td class="col-hi-new">۳–۱۰ روز</td>
+            </tr>
+            <tr>
+              <td><strong>میرجاوه</strong></td>
+              <td>🇵🇰 پاکستان</td><td class="col-hi-new">300 کامیون/روز</td><td class="col-hi-new">فرآورده نفتی، کالای مصرفی</td><td class="col-hi-new">گسترش بالقوه کریدور CPEC</td><td class="col-hi-new">زیرساخت ضعیف؛ ریسک امنیتی</td><td class="col-hi-new">1,800 km</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span></td><td class="col-hi-new">$150–280/ton</td><td class="col-hi-new">۴–۱۲ روز</td>
+            </tr>
+            <tr>
+              <td><strong>آستارا</strong></td>
+              <td>🇦🇿 آذربایجان</td><td class="col-hi-new">ریلی + جاده‌ای</td><td class="col-hi-new">فولاد، چوب، کالای روسیه</td><td style="color:var(--grn);">گذرگاه غربی INSTC؛ ریل مستقیم به آذربایجان</td><td class="col-hi-new">مناقشه قره‌باغ؛ روابط پرتنش ایران–آذربایجان</td><td class="col-hi-new">1,200 km</td><td class="col-hi-new"><span class="bd bd-g">جاده ✓</span> <span class="bd bd-g">ریل ✓</span></td><td class="col-hi-new">$180–300/ton</td><td class="col-hi-new">۲–۶ روز</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="p">
+        <div class="p-title">امکانات ترانزیتی ویژه <span class="p-src">منبع: PMO · IRICA</span></div>
+        <div class="sig"><span class="sig-lvl bd-g">TIR</span><span class="sig-name">کاپوتاژ TIR — عبور با مهر و موم بدون باز کردن بار</span><span class="sig-val">مرزهای ترکیه، عراق، ترکمنستان</span></div>
+        <div class="sig"><span class="sig-lvl bd-b">ATA</span><span class="sig-name">دفترچه ATA — ورود موقت بدون گمرک برای نمایشگاه‌ها</span><span class="sig-val">بنادر و مرزهای بین‌المللی</span></div>
+        <div class="sig"><span class="sig-lvl bd-p">FTZ</span><span class="sig-name">مناطق آزاد: کیش، قشم، چابهار، منطقه آزاد ارس</span><span class="sig-val">معافیت گمرکی</span></div>
+        <div class="sig"><span class="sig-lvl bd-a">INSTC</span><span class="sig-name">کریدور شمال–جنوب: هند → رجایی → سرخس → روسیه</span><span class="sig-val">۳۰درصد کاهش هزینه نسبت به سوئز</span></div>
+        <div class="sig"><span class="sig-lvl bd-g">RoRo</span><span class="sig-name">امیرآباد: تنها RoRo ریلی خزر — قطار روی کشتی</span><span class="sig-val">ابتکار ۲۰۲۶ روسیه–ایران</span></div>
+        <div class="sig"><span class="sig-lvl bd-r">⚠</span><span class="sig-name">کالاهای ممنوع عبور: اسلحه، مواد هسته‌ای، مواد مخدر، کالای تحت تحریم OFAC</span><span class="sig-val">بدون استثنا</span></div>
+      </div>
+      <div class="p">
+        <div class="p-title">کالاهای اصلی صادرات/واردات هر مسیر</div>
+        <div class="sig"><span class="sig-lvl bd-b">ترکیه</span><span class="sig-name"><strong>صادرات ایران:</strong> پتروشیمی، پسته، زعفران، فرش</span></div>
+        <div class="sig"><span class="sig-lvl bd-b">ترکیه</span><span class="sig-name"><strong>واردات ایران:</strong> ماشین‌آلات، نساجی، الکترونیک، فولاد</span></div>
+        <div class="sig"><span class="sig-lvl bd-a">عراق</span><span class="sig-name"><strong>صادرات ایران:</strong> مواد غذایی، پتروشیمی، سیمان، برق</span></div>
+        <div class="sig"><span class="sig-lvl bd-a">عراق</span><span class="sig-name"><strong>واردات ایران:</strong> نفت خام (خوزستان)، ماشین‌آلات</span></div>
+        <div class="sig"><span class="sig-lvl bd-t">روسیه</span><span class="sig-name"><strong>واردات ایران:</strong> گندم، فولاد، چوب، لوازم خانگی (INSTC)</span></div>
+        <div class="sig"><span class="sig-lvl bd-t">روسیه</span><span class="sig-name"><strong>صادرات ایران:</strong> پتروشیمی، میوه، خشکبار، فرش</span></div>
+        <div class="sig"><span class="sig-lvl bd-p">آسیا</span><span class="sig-name"><strong>رجایی/چابهار:</strong> نفت خام، LNG، سنگ‌آهن، پتروشیمی</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+function showDash(id) {
+  var sections = document.querySelectorAll('.dash-section');
+  for (var i = 0; i < sections.length; i++) sections[i].classList.remove('active');
+  var btns = document.querySelectorAll('.page-header .nav-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  var activeSection = document.getElementById('dash-' + id);
+  if (activeSection) activeSection.classList.add('active');
+  for (var i = 0; i < btns.length; i++) {
+    var onclickAttr = btns[i].getAttribute('onclick');
+    if (onclickAttr && onclickAttr.indexOf("'" + id + "'") !== -1) btns[i].classList.add('active');
+  }
+}
+
+function toggleCorridorNew(id) {
+  var body = document.getElementById(id + '-body');
+  var chev = document.getElementById(id + '-chev');
+  if (body) {
+    if (body.classList.contains('open')) {
+      body.classList.remove('open');
+      if (chev) chev.classList.remove('open');
+    } else {
+      body.classList.add('open');
+      if (chev) chev.classList.add('open');
+    }
+  }
+}
+
+function switchTabNew(corridorId, tabName) {
+  var body = document.getElementById(corridorId + '-body');
+  if (!body) return;
+  var contents = body.querySelectorAll('.tab-content-new');
+  for (var i = 0; i < contents.length; i++) {
+    if (contents[i].id === corridorId + '-' + tabName) {
+      contents[i].classList.add('active');
+    } else {
+      contents[i].classList.remove('active');
+    }
+  }
+  var tabs = body.querySelectorAll('.tab-new');
+  for (var i = 0; i < tabs.length; i++) {
+    var onclickAttr = tabs[i].getAttribute('onclick');
+    if (onclickAttr && onclickAttr.indexOf("'" + tabName + "'") !== -1) {
+      tabs[i].classList.add('active');
+    } else {
+      tabs[i].classList.remove('active');
+    }
+  }
+}
+
+function switchCorridorsTab(tabName) {
+  var panes = document.querySelectorAll('.corridors-tab-pane');
+  for (var i = 0; i < panes.length; i++) panes[i].classList.remove('active');
+  var btns = document.querySelectorAll('.corridors-tab-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  var activePane = document.getElementById('corridors-tab-' + tabName);
+  if (activePane) activePane.classList.add('active');
+  if (window.event && window.event.target) {
+    window.event.target.classList.add('active');
+  }
+}
+
+window.onload = function() {
+  showDash('main');
+};
+
+window.showDash = showDash;
+window.toggleCorridorNew = toggleCorridorNew;
+window.switchTabNew = switchTabNew;
+window.switchCorridorsTab = switchCorridorsTab;
+</script>
+</body>
+</html>
