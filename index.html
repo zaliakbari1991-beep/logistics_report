@@ -12,18 +12,18 @@
   body { font-family: 'Vazirmatn', Tahoma, 'Segoe UI', Arial, sans-serif; background: #f0efe9; direction: rtl; line-height: 1.5; color: #1a2a6b; }
   @media (prefers-color-scheme: dark) { body { background: #1c1c1a; } .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card { background: #252523; border-color: #3a3a36; color: #d0d4e8; } .stat-item { border-bottom-color: #3a3a36; } }
   
-  /* خط نازک نارنجی یکسان برای همه کادرها */
+  /* Uniform thin orange border for all boxes */
   .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card, .metric-box, .stats-row .stat-card, .shipping-card, .countries-list, .country-detail, .investment-card, .cor-card, .route-card-ahvaz, .port-card, .corridor-card, .bri-card, .metric-card, .inner-metric, .alert-banner, .compare-tab, .port-compare-wrapper, .comp-table-wrap, .recommend-box, .pc, .alert, .reco, .thresh, .carec-map-card, .topbar, .tabs, .port-grid .pc, .panel .alert, .ref, .sdiv, .thresh, .comp-wrap, .reco, .port-grid .pc .cs, .pc-head, .route-card-pro, .port-card-pro, .info-card-pro, .route-card-new, .corridor-card-new, .corridor-header-new, .tab-new, .compare-tab, .section-card-new, .alert, .alert-box-new, .ref-box-new, .branch-ahvaz, .info-item-ahvaz, .path-visual-ahvaz, .comparison-table-ahvaz, .carec-map-card, .pdf-download-section, .bri-card-new, .corridor-card, .port-card, .bri-card, .metric-card, .inner-metric {
     outline: 0.5px solid #F79646;
     outline-offset: -0.5px;
   }
   
-  /* یکدست کردن رنگ متن اصلی همه بخش‌ها به سرمه‌ای */
+  /* Standardize the main text color across all sections to navy blue */
   body, .card, .page-header, .cor-card, .detail-panel, .map-section, .shipping-card, .country-card, .investment-card, .stat-card, .metric-box, .stats-row .stat-card, .shipping-card, .countries-list, .country-detail, .investment-card, .cor-card, .route-card-ahvaz, .port-card, .corridor-card, .bri-card, .metric-card, .inner-metric, .alert-banner, .compare-tab, .port-compare-wrapper, .comp-table-wrap, .recommend-box, .pc, .alert, .reco, .thresh, .carec-map-card, .topbar, .tabs, .port-grid .pc, .panel .alert, .ref, .sdiv, .thresh, .comp-wrap, .reco, .port-grid .pc .cs, .pc-head, .route-card-pro, .port-card-pro, .info-card-pro, .route-card-new, .corridor-card-new, .corridor-header-new, .tab-new, .compare-tab, .section-card-new, .alert, .alert-box-new, .ref-box-new, .branch-ahvaz, .info-item-ahvaz, .path-visual-ahvaz, .comparison-table-ahvaz, .carec-map-card, .pdf-download-section, .bri-card-new, .corridor-card, .port-card, .bri-card, .metric-card, .inner-metric, .detail-panel-pro, .port-detail-pro, .route-detail, .country-info-value, .stat-item .number, .metric-value, .stat-title, .shipping-title, .investment-title, .cor-name, .detail-title, .info-value-ahvaz, .info-label-ahvaz, .route-name-ahvaz, .branch-title-ahvaz, .alert-title, .card-title, .section-title, .inner-value, .kv-val, .corridor-name, .bri-value, .port-name, .metric-label, .stat-item .label, .country-info-label, .update-note, .dash-footer p, .badge, .tag, .compare-tab, .nav-btn, .route-btn, .map-btn, .filt, .cor-badge, .status-badge-ahvaz, .ref-box-ahvaz, .footer-note-ahvaz, th, td, .caption, .pdf-link, .alert-body, .route-sub-ahvaz, .info-label, .kv-key, .inner-label, .metric-sub, .bar-label, .bar-pct, .port-header, .corridor-header, .bri-label, .metric-label-new, .metric-value-new, .metric-note-new, .tag-new, .route-step-new, .route-arrow-new, .leg-item-new, .li-new, .sec-header-new h2, .ref-inline-new, .badge-new, .note-new, .risk-row-new, .rdot-new, .src-badge-new, .alert-warn-new, .alert-danger-new, .alert-ok-new, .compare-panel, .filter-btn-pro, .port-stat-label-pro, .port-stat-value-pro, .detail-close-pro, .info-label-pro, .info-value-pro, .route-title-pro, .rf-label-pro, .rf-val-pro, .risk-item-pro, .route-note-pro, .thresh-title, .thresh-row, .branch-title-ahvaz, .info-label-ahvaz, .info-value-ahvaz strong, .country-info-value, .country-info-label {
     color: #1a2a6b;
   }
   
-  /* حفظ رنگ‌های ویژه (اخطار، ریسک، موفقیت) بدون تغییر */
+  /* Preserve special colors for warnings, risks, and success states without modification */
   .risk-high, .c-danger, .status-critical-ahvaz, .alert-danger-new, .tag-danger, .badge-danger, .c-warning, .tag-warning, .risk-medium, .c-info, .tag-info, .c-success, .tag-success, .status-active-ahvaz, .alert-success, .risk-low, .text-success, .text-danger, .text-warning, .text-info {
     color: inherit;
   }
@@ -44,7 +44,7 @@
   .dash-section { display: none; }
   .dash-section.active { display: block; }
   
-  /* استایل‌های صفحه اول (کریدور اختصاصی) */
+  /* Preserve the first-page styles (dedicated corridor section) */
   .project-description {
     background: linear-gradient(115deg, #ffffff 0%, #fefcf7 100%);
     border-radius: 28px;
@@ -209,7 +209,7 @@
   .update-note { font-size: 10px; color: #999; text-align: left; margin-top: 20px; }
   @media (max-width: 768px) { .countries-container { flex-direction: column; } .countries-list { width: 100%; } }
   
-  /* استایل‌های مقصد:اهواز */
+  /* Destination styles: Ahvaz */
   .alert-banner { margin: 20px 0; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-right: 4px solid #ef4444; border-radius: 8px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start; }
   .alert-icon { font-size: 20px; }
   .alert-title { font-weight: 700; color: #b91c1c; font-size: 13px; margin-bottom: 4px; }
@@ -414,7 +414,7 @@
   .investment-placeholder-suggest { text-align: right; line-height: 2; color: #666; padding: 20px; background: #f9f9f9; border-radius: 12px; }
   @media (prefers-color-scheme: dark) { .investment-placeholder-suggest { background: #2a2a28; color: #aaa; } }
   
-  /* استایل‌های صفحه مقایسه بنادر */
+  /* Comparison page styles for ports */
   .port-compare-wrapper { background: var(--bg); border-radius: 16px; overflow: hidden; }
   .compare-tabs { display: flex; gap: 4px; padding: 16px 0 0; border-bottom: 1px solid var(--border); overflow-x: auto; flex-wrap: wrap; }
   .compare-tab { padding: 8px 18px; border-radius: 24px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-muted); background: transparent; border: 1px solid transparent; white-space: nowrap; }
@@ -423,14 +423,14 @@
   .compare-panel { display: none; padding: 24px 0; }
   .compare-panel.active { display: block; }
   
-  /* استایل‌های جدید برای صفحه کریدورها */
+  /* New styles for the corridors page */
   .corridors-tab-bar { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
   .corridors-tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 500; background: transparent; border: none; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all 0.2s; font-family: 'Vazirmatn', sans-serif; }
   .corridors-tab-btn.active { color: #185FA5; border-bottom-color: #185FA5; }
   .corridors-tab-pane { display: none; }
   .corridors-tab-pane.active { display: block; }
   
-  /* استایل‌های کریدور ابریشم */
+  /* Silk Corridor styles */
   .corridor-card-new { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
   .corridor-header-new { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; border-bottom: 0.5px solid var(--border); }
   .corridor-header-new:hover { background: var(--surface); }
